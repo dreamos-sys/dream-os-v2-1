@@ -1,0 +1,4 @@
+body { margin:0; font-family: sans-serif; background:#0f172a; color:white; }
+.module-grid { display:flex; gap:1rem; padding:1rem; }
+.module-card { background:#1e293b; border:none; border-radius:8px; padding:1rem; color:white; cursor:pointer; }
+.module-card:hover { background:#334155; }
