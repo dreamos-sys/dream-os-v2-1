@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dream OS Logo - Testing Rotation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #020617 0%, #0f172a 100%);
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      color: #10b981;
+      margin-bottom: 3rem;
+    }
+    .logo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .logo-card {
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      border: 2px solid rgba(16, 185, 129, 0.2);
+      transition: transform 0.3s, border-color 0.3s;
+      cursor: pointer;
+    }
+    .logo-card:hover {
+      transform: translateY(-5px);
+      border-color: #10b981;
+    }
+    .logo-title {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #94a3b8;
+    }
+    .rotation-value {
+      font-size: 0.8rem;
+      color: #10b981;
+      margin-top: 0.5rem;
+      font-family: monospace;
+    }
+    .selected {
+      border-color: #FFD700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+    }
+    .controls {
+      background: rgba(30, 41, 59, 0.8);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+    .control-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #94a3b8;
+    }
+    input[type="range"] {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .value-display {
+      color: #10b981;
+      font-family: monospace;
+    }
+    .instruction {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid #10b981;
+      padding: 1rem;
+      margin: 2rem 0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🏰 Dream OS Logo - Rotation Testing</h1>
+    
+    <div class="instruction">
+      <strong>📌 Cara Pakai:</strong>
+      <ol>
+        <li>Klik salah satu logo di bawah untuk preview</li>
+        <li>Atau gunakan slider di bawah untuk custom rotation</li>
+        <li>Klik "Copy Code" untuk mendapatkan SVG code</li>
+        <li>Paste ke index.html Dream OS v2.1</li>
+      </ol>
+    </div>
+
+    <!-- Logo Variations Grid -->
+    <div class="logo-grid">
+      
+      <!-- Option 1: -30° (Subtle) -->
+      <div class="logo-card" onclick="selectLogo(this, -30)">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FFD700"/>
+              <stop offset="100%" style="stop-color:#FFA500"/>
+            </linearGradient>
+            <filter id="glow1">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <g transform="rotate(-30 50 50)" filter="url(#glow1)">
+            <path d="M 30,45 Q 30,30 45,30 Q 60,30 60,45 Q 60,55 50,60 Q 40,65 35,55" 
+                  fill="none" stroke="url(#grad1)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 50,60 Q 55,70 65,65 Q 70,60 68,50" 
+                  fill="none" stroke="url(#grad1)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="3" fill="#FFF" opacity="0.8"/>
+          </g>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#FFA500" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+        </svg>
+        <div class="logo-title">Subtle Rotation</div>
+        <div class="rotation-value">-30° (Masih keliatan ها)</div>
+      </div>
+
+      <!-- Option 2: -45° (Balanced) -->
+      <div class="logo-card selected" onclick="selectLogo(this, -45)">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FFD700"/>
+              <stop offset="100%" style="stop-color:#FFA500"/>
+            </linearGradient>
+            <filter id="glow2">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <g transform="rotate(-45 50 50)" filter="url(#glow2)">
+            <path d="M 30,45 Q 30,30 45,30 Q 60,30 60,45 Q 60,55 50,60 Q 40,65 35,55" 
+                  fill="none" stroke="url(#grad2)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 50,60 Q 55,70 65,65 Q 70,60 68,50" 
+                  fill="none" stroke="url(#grad2)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="3" fill="#FFF" opacity="0.8"/>
+          </g>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#FFA500" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+        </svg>
+        <div class="logo-title">Balanced (Recommended)</div>
+        <div class="rotation-value">-45° (Perfect D shape)</div>
+      </div>
+
+      <!-- Option 3: -60° (Modern D) -->
+      <div class="logo-card" onclick="selectLogo(this, -60)">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FFD700"/>
+              <stop offset="100%" style="stop-color:#FFA500"/>
+            </linearGradient>
+            <filter id="glow3">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <g transform="rotate(-60 50 50)" filter="url(#glow3)">
+            <path d="M 30,45 Q 30,30 45,30 Q 60,30 60,45 Q 60,55 50,60 Q 40,65 35,55" 
+                  fill="none" stroke="url(#grad3)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 50,60 Q 55,70 65,65 Q 70,60 68,50" 
+                  fill="none" stroke="url(#grad3)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="3" fill="#FFF" opacity="0.8"/>
+          </g>
+          <circle cx="50" cy="50" r="45" fill="none" stroke="#FFA500" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>
+        </svg>
+        <div class="logo-title">Modern D</div>
+        <div class="rotation-value">-60° (Lebih ke D)</div>
+      </div>
+
+      <!-- Option 4: Emerald Theme -->
+      <div class="logo-card" onclick="selectLogo(this, -45, 'emerald')">
+        <svg width="100" height="100" viewBox="0 0 100 100">
+          <defs>
+            <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#34D399"/>
+              <stop offset="100%" style="stop-color:#10B981"/>
+            </linearGradient>
+            <filter id="glow4">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <g transform="rotate(-45 50 50)" filter="url(#glow4)">
+            <path d="M 30,45 Q 30,30 45,30 Q 60,30 60,45 Q 60,55 50,60 Q 40,65 35,55" 
+                  fill="none" stroke="url(#grad4)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 50,60 Q 55,70 65,65 Q 70,60 68,50" 
+                  fill="none" stroke="url(#grad4)" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="50" cy="50" r="3" fill="#FFF" opacity="0.8"/>
+          </g>
+        </svg>
+        <div class="logo-title">Emerald Theme</div>
+        <div class="rotation-value">-45° + Hijau Dream OS</div>
+      </div>
+
+    </div>
+
+    <!-- Custom Controls -->
+    <div class="controls">
+      <h2 style="color: #10b981; margin-bottom: 1.5rem;">🎨 Custom Rotation</h2>
+      
+      <div class="control-group">
+        <label>Rotation Angle: <span class="value-display" id="angleValue">-45°</span></label>
+        <input type="range" id="rotationSlider" min="-90" max="0" value="-45" step="5">
+      </div>
+
+      <div class="control-group">
+        <label>Stroke Width: <span class="value-display" id="strokeValue">8</span></label>
+        <input type="range" id="strokeSlider" min="4" max="12" value="8" step="1">
+      </div>
+
+      <div class="control-group">
+        <label>Size: <span class="value-display" id="sizeValue">80px</span></label>
+        <input type="range" id="sizeSlider" min="40" max="120" value="80" step="10">
+      </div>
+
+      <div class="control-group">
+        <label>
+          <input type="checkbox" id="showRing" checked> Show Outer Ring
+        </label>
+      </div>
+
+      <div class="control-group">
+        <label>
+          <input type="checkbox" id="animateLogo"> Enable Animation
+        </label>
+      </div>
+
+      <!-- Live Preview -->
+      <div style="text-align: center; margin: 2rem 0; padding: 2rem; background: rgba(16, 185, 129, 0.1); border-radius: 16px;">
+        <div id="livePreview">
+          <!-- SVG akan di-generate di sini -->
+        </div>
+        <p style="margin-top: 1rem; color: #94a3b8;">Live Preview</p>
+      </div>
+
+      <button onclick="copyCode()" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: white; border: none; padding: 1rem 2rem; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%;">
+        📋 Copy SVG Code
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentRotation = -45;
+    let currentStroke = 8;
+    let currentSize = 80;
+    let currentColor = 'gold'; // 'gold' atau 'emerald'
+
+    // Slider event listeners
+    document.getElementById('rotationSlider').addEventListener('input', (e) => {
+      currentRotation = parseInt(e.target.value);
+      document.getElementById('angleValue').textContent = currentRotation + '°';
+      updateLivePreview();
+    });
+
+    document.getElementById('strokeSlider').addEventListener('input', (e) => {
+      currentStroke = parseInt(e.target.value);
+      document.getElementById('strokeValue').textContent = currentStroke;
+      updateLivePreview();
+    });
+
+    document.getElementById('sizeSlider').addEventListener('input', (e) => {
+      currentSize = parseInt(e.target.value);
+      document.getElementById('sizeValue').textContent = currentSize + 'px';
+      updateLivePreview();
+    });
+
+    document.getElementById('showRing').addEventListener('change', updateLivePreview);
+    document.getElementById('animateLogo').addEventListener('change', updateLivePreview);
+
+    function selectLogo(element, rotation, color = 'gold') {
+      // Remove selected class from all cards
+      document.querySelectorAll('.logo-card').forEach(card => card.classList.remove('selected'));
+      // Add selected class to clicked card
+      element.classList.add('selected');
+      
+      currentRotation = rotation;
+      currentColor = color;
+      document.getElementById('rotationSlider').value = rotation;
+      document.getElementById('angleValue').textContent = rotation + '°';
+      
+      updateLivePreview();
+    }
+
+    function generateSVG(rotation, stroke, size, color, showRing, animate) {
+      const gradId = 'goldGrad' + Date.now();
+      const filterId = 'glow' + Date.now();
+      const color1 = color === 'emerald' ? '#34D399' : '#FFD700';
+      const color2 = color === 'emerald' ? '#10B981' : '#FFA500';
+      
+      const animateAttr = animate ? `
+        <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="60s" repeatCount="indefinite"/>
+      ` : '';
+
+      return `
+<svg width="${size}" height="${size}" viewBox="0 0 100 100" style="margin-bottom:1rem;filter:drop-shadow(0 0 20px ${color === 'emerald' ? 'rgba(16,185,129,0.5)' : 'rgba(255,215,0,0.5)'})">
+  <defs>
+    <linearGradient id="${gradId}" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:${color1}"/>
+      <stop offset="100%" style="stop-color:${color2}"/>
+    </linearGradient>
+    <filter id="${filterId}">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g transform="rotate(${rotation} 50 50)" filter="url(#${filterId})">
+    ${animateAttr}
+    <path d="M 30,45 Q 30,30 45,30 Q 60,30 60,45 Q 60,55 50,60 Q 40,65 35,55" 
+          fill="none" stroke="url(#${gradId})" stroke-width="${stroke}" stroke-linecap="round"/>
+    <path d="M 50,60 Q 55,70 65,65 Q 70,60 68,50" 
+          fill="none" stroke="url(#${gradId})" stroke-width="${stroke}" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="3" fill="#FFF" opacity="0.8"/>
+  </g>
+  ${showRing ? `<circle cx="50" cy="50" r="45" fill="none" stroke="${color2}" stroke-width="1" stroke-opacity="0.3" stroke-dasharray="5,5"/>` : ''}
+</svg>`;
+    }
+
+    function updateLivePreview() {
+      const showRing = document.getElementById('showRing').checked;
+      const animate = document.getElementById('animateLogo').checked;
+      const svg = generateSVG(currentRotation, currentStroke, 100, currentColor, showRing, animate);
+      document.getElementById('livePreview').innerHTML = svg;
+    }
+
+    function copyCode() {
+      const showRing = document.getElementById('showRing').checked;
+      const animate = document.getElementById('animateLogo').checked;
+      const svg = generateSVG(currentRotation, currentStroke, currentSize, currentColor, showRing, animate);
+      
+      navigator.clipboard.writeText(svg).then(() => {
+        alert('✅ SVG code copied to clipboard!');
+     # 🎨 VERSI LENGKAP SVG LOGO "ه" → "D" UNTUK TESTING! ✨
+
+**My Bro!** 😎☝🏼 Ini gue bikinin **LENGKAP** dengan **BERBAGAI VARIASI ROTATE** biar lu bisa cari yang paling pas!
+
+---
+
+## 📋 FULL CODE UNTUK TESTING (Copy-Paste ke HTML File):
+
+
