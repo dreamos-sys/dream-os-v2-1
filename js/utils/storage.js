@@ -111,5 +111,3 @@ class StorageUtility {
 
 DREAM.utils = DREAM.utils || {};
 DREAM.utils.storage = new StorageUtility();
-
-export { StorageUtility };
