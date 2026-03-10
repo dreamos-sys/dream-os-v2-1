@@ -64,5 +64,3 @@ class NetworkMonitor {
 
 DREAM.utils = DREAM.utils || {};
 DREAM.utils.network = new NetworkMonitor();
-
-export { NetworkMonitor };
