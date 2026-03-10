@@ -838,6 +838,27 @@ a:focus-visible {
         background: white;
         color: black;
     }
+
+    /* Explainable AI Insights */
+.insight-message {
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.insight-reason {
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+.insight-confidence {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--color-primary);
+    border-top: 1px solid var(--glass-border);
+    padding-top: 0.75rem;
+    margin-top: 0.75rem;
+}
 }
 
 /* ============================================================================
