@@ -4,3 +4,77 @@ body { background: #0b1120; color: #fff; font-family: sans-serif; margin: 0; }
 .module-card { background: #1e293b; padding: 1.5rem; border-radius: 12px; cursor: pointer; }
 .module-container { padding: 1rem; }
 .error { color: #ef4444; padding: 2rem; text-align: center; }
+/* Styling Khusus untuk Versi Islamic Enterprise */
+
+/* Header Content Alignment */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+#dream-os-logo {
+  height: 40px;
+  width: 40px;
+  transition: transform 0.5s ease-in-out; /* Animasi Smooth */
+}
+
+.system-meta {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Teks Arab (Bismillah & Shalawat) */
+.arabic {
+  font-family: 'Scheherazade New', serif; /* Font khusus Arab */
+  font-weight: bold;
+}
+
+.bismillah-text {
+  font-size: 1.2rem;
+  color: #a7f3d0; /* Warna hijau muda */
+}
+
+/* User Badge */
+.clock { color: white; }
+.user-badge { color: white; padding: 5px 10px; border-radius: 20px; background: #1f2937;}
+
+/* Shalawat Button sebagai Navigation Bar */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #111827;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #1f2937;
+}
+
+.nav-btn.shalawat-action {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.nav-btn.shalawat-action .arabic {
+  font-size: 1.2rem;
+  color: #10b981; /* Warna hijau muda */
+}
+
+.btn-subtext { font-size: 0.8rem; color: #9ca3af;}
