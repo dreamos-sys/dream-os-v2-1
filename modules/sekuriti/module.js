@@ -1,13 +1,14 @@
 // modules/sekuriti/module.js
 export default async function initModule(ctx) {
-  const { container, utils, user } = ctx; // 'services' diganti 'utils'
+  const { container, utils, state } = ctx;
+  const user = state?.user || { name: 'GUEST' };
 
   // Render UI
   container.innerHTML = `
     <div class="module-wrapper animate-fade-in">
       <div class="module-header">
         <h2>🛡️ Sistem Sekuriti</h2>
-        <p>Petugas: ${user ? user.name : 'GUEST'}</p>
+        <p>Petugas: ${user.name}</p>
       </div>
 
       <div class="module-content">
@@ -43,9 +44,9 @@ export default async function initModule(ctx) {
 
   btnSubmit.addEventListener('click', handleSubmit);
 
-  // Cleanup function (akan dipanggil saat modul ditutup)
+  // Cleanup function
   return function cleanup() {
     console.log('🧹 Cleaning up Sekuriti Module...');
     btnSubmit.removeEventListener('click', handleSubmit);
   };
-} 
+}
