@@ -1,0 +1,42 @@
+/* Dream OS 2026 - Final Polish */
+
+/* Smooth Page Transitions */
+.module-container {
+    animation: moduleFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes moduleFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Active Nav Indicator */
+.nav-item.active::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--dream-primary);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--dream-primary);
+}
+
+/* AI Button Enhanced Glow */
+#btn-magic-ai:hover {
+    box-shadow: 
+        0 0 40px rgba(16, 185, 129, 0.6),
+        0 0 80px rgba(16, 185, 129, 0.3);
+}
+
+/* Print Optimization */
+@media print {
+    .glass-header,
+    .glass-footer,
+    #ai-button-container,
+    #main-navigation {
+        display: none !important;
+    }
+}
