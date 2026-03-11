@@ -243,7 +243,8 @@ export default async function({ container, services, supabase, user, i18n, lang 
 };
 
 // ════════════════════════════════════════════════
-// Global Functions// ════════════════════════════════════════════════
+// Global Functions
+// ════════════════════════════════════════════════
 
 function updateAIStatus() {
     const statusEl = document.getElementById('ai-status-content');
@@ -278,7 +279,6 @@ window.sendAIMessage = async function() {
     const message = input.value.trim();
     if (!message) return;
     
-    // Add user message to chat
     messagesDiv.innerHTML += `
         <div style="
             background: rgba(59, 130, 246, 0.15);
@@ -291,8 +291,8 @@ window.sendAIMessage = async function() {
             <div style="font-size: 0.75rem; color: #3b82f6; margin-bottom: 0.25rem; font-weight: 600;">
                 👤 You
             </div>
-            <div>${message}</div>
-        </div>    `;
+            <div>${message}</div>        </div>
+    `;
     
     input.value = '';
     input.disabled = true;
@@ -302,13 +302,11 @@ window.sendAIMessage = async function() {
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
     
     try {
-        // Call AI Provider
         const response = await window.AIProvider.sendRequest(message, {
             user: window.DREAM.state.user,
             module: 'ai-panel'
         });
         
-        // Add AI response to chat
         messagesDiv.innerHTML += `
             <div style="
                 background: rgba(16, 185, 129, 0.15);
@@ -337,4 +335,72 @@ window.sendAIMessage = async function() {
                 margin-bottom: 1rem;
                 color: #ef4444;
             ">
-                <div style="font-size: 0.75rem; font-weight
+                <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 0.25rem;">
+                    ❌ Error
+                </div>
+                <div>${error.message}</div>
+            </div>
+        `;        
+        window.DREAM.showToast('AI request failed', 'error');
+    }
+    
+    input.disabled = false;
+    sendBtn.disabled = false;
+    sendBtn.innerHTML = '📤 Kirim';
+    input.focus();
+    
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+};
+
+window.clearAIChat = function() {
+    const messagesDiv = document.getElementById('ai-chat-messages');
+    if (!messagesDiv) return;
+    
+    messagesDiv.innerHTML = `
+        <div style="color: var(--dream-text-muted); text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🤖</div>
+            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem;">
+                Dream AI Assistant
+            </p>
+            <p style="font-size: 0.9rem;">
+                Chat cleared. Silakan tanya sesuatu...
+            </p>
+        </div>
+    `;
+    
+    window.DREAM.showToast('Chat cleared', 'info');
+};
+
+window.askAI = function(question) {
+    const input = document.getElementById('ai-chat-input');
+    if (!input) return;
+    
+    input.value = question;
+    window.sendAIMessage();
+};
+
+// ════════════════════════════════════════════════
+// ✅ VOICE COMMAND FUNCTION
+// ════════════════════════════════════════════════
+
+window.startVoiceCommand = function() {
+    if (window.AIVoice) {
+        window.AIVoice.startListening();
+    } else {
+        window.DREAM.showToast('🎤 Voice Command loading...', 'info');
+    }
+};
+// ════════════════════════════════════════════════
+// Load saved AI config on init
+// ════════════════════════════════════════════════
+
+(function() {
+    try {
+        const saved = localStorage.getItem('dream-ai-config');
+        if (saved) {
+            window.AI_CONFIG.permanentAPI = JSON.parse(saved);
+        }
+    } catch(e) {
+        console.warn('[AI CONFIG] Failed to load saved config');
+    }
+})();
