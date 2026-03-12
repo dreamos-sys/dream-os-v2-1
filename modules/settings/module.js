@@ -1,3 +1,4 @@
+// modules/settings/module.js
 export async function render() {
     return `
         <div class="p-4">
