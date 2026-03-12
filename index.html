@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark" data-env="production">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Dream OS 2026 Enterprise</title>
+    <meta name="theme-color" content="#10b981">
+    <link rel="icon" href="/assets/favicon.ico">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="core/engine.css">
+    
+    <style>
+        /* Critical inline CSS */
+        body { background: #020617; color: #e2e8f0; font-family: 'Inter', sans-serif; margin:0; }
+        #loading-screen { position:fixed; inset:0; background:#020617; display:flex; align-items:center; justify-content:center; z-index:10000; transition:opacity 0.5s; }
+        #loading-screen.hidden { opacity:0; pointer-events:none; }
+        .loader { width:60px; height:60px; border:4px solid rgba(16,185,129,0.2); border-top-color:#10b981; border-radius:50%; animation:spin 1s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+        #toast-container { position:fixed; top:1rem; right:1rem; z-index:3000; display:flex; flex-direction:column; gap:0.5rem; pointer-events:none; max-width:320px; }
+        .toast { background:rgba(15,23,42,0.95); backdrop-filter:blur(20px); border:1px solid rgba(16,185,129,0.3); border-radius:12px; padding:1rem; color:#e2e8f0; }
+    </style>
+</head>
+<body>
+    <!-- LOADING SCREEN -->
+    <div id="loading-screen">
+        <div style="text-align:center;">
+            <div class="loader"></div>
+            <p style="margin-top:1rem;color:#94a3b8;">Initializing Dream OS...</p>
+            <p class="font-arabic" style="color:#10b981;">بِسْمِ اللَّهِ</p>
+        </div>
+    </div>
+
+    <!-- ERROR BOUNDARY -->
+    <div id="error-boundary" style="display:none;position:fixed;inset:0;background:rgba(2,6,23,0.95);z-index:9999;align-items:center;justify-content:center;padding:2rem;">
+        <div style="max-width:400px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:16px;padding:2rem;text-align:center;">
+            <div style="font-size:3rem;margin-bottom:1rem;">⚠️</div>
+            <h3 style="font-size:1.25rem;font-weight:700;color:#ef4444;margin-bottom:0.5rem;">System Error</h3>
+            <p id="error-message" style="font-size:0.875rem;color:#94a3b8;margin-bottom:1.5rem;"></p>
+            <button onclick="location.reload()" style="background:#10b981;color:#020617;padding:0.75rem 1.5rem;border:none;border-radius:8px;font-weight:700;cursor:pointer;">
+                Reload Application
+            </button>
+        </div>
+    </div>
+
+    <!-- APP SHELL -->
+    <div id="app-shell" class="app-shell" style="max-width:480px;margin:0 auto;position:relative;display:flex;flex-direction:column;min-height:100dvh;">
+        <!-- HEADER -->
+        <header id="app-header" class="glass-header" style="background:rgba(15,23,42,0.65);backdrop-filter:blur(24px);border-bottom:1px solid rgba(16,185,129,0.2);">
+            <div style="display:flex;justify-content:space-between;padding:0.5rem 1rem;">
+                <div style="display:flex;gap:1rem;">
+                    <span id="prayer-time-display" style="color:#10b981;">Dzuhur 12:05</span>
+                    <span id="network-type">4G</span>
+                </div>
+                <div>
+                    <span id="battery-level">100%</span>
+                </div>
+            </div>
+            <div style="text-align:center;padding:1rem;">
+                <h1 class="bismillah" style="font-family:'Amiri',serif;color:#10b981;">بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ</h1>
+                <h2 class="shalawat" style="font-family:'Amiri',serif;color:#34d399;">اَللهم صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ</h2>
+            </div>
+            <div id="breadcrumb-container" style="padding:0 1rem 0.5rem;color:#94a3b8;font-size:0.75rem;display:none;">
+                <span id="current-module-name">Dashboard</span>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main id="core-module-container" style="flex:1;overflow-y:auto;padding:1rem;padding-bottom:calc(80px + env(safe-area-inset-bottom));">
+            <div id="dynamic-stage">
+                <div style="text-align:center;padding:5rem 0;">
+                    <i class="fas fa-cog fa-spin" style="color:#10b981;font-size:1.5rem;"></i>
+                    <p style="color:#10b981;opacity:0.7;">Loading modules...</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- FLOATING AI BUTTON -->
+        <div style="position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:1000;text-align:center;">
+            <div style="background:#10b981;color:white;padding:0.25rem 0.75rem;border-radius:999px;font-size:0.75rem;margin-bottom:0.5rem;">🤖 Tanya AI</div>
+            <button id="btn-magic-ai" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#10b981,#06b6d4);border:3px solid rgba(255,255,255,0.2);cursor:pointer;font-size:1.75rem;" onclick="window.openAIPanel()">
+                🤖
+            </button>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <footer style="background:rgba(15,23,42,0.85);backdrop-filter:blur(24px);border-top:1px solid rgba(16,185,129,0.2);position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;padding:0.5rem 1rem calc(0.5rem + env(safe-area-inset-bottom));">
+            <nav style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;">
+                <button class="nav-item active" data-module="home" onclick="DREAM.load('home')" style="display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;cursor:pointer;">
+                    <span style="font-size:1.5rem;">🏠</span>
+                    <span style="font-size:0.65rem;">Home</span>
+                </button>
+                <button class="nav-item" data-module="sekuriti" onclick="DREAM.load('sekuriti')" style="display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;cursor:pointer;">
+                    <span style="font-size:1.5rem;">🛡️</span>
+                    <span style="font-size:0.65rem;">Security</span>
+                </button>
+                <button class="nav-item" data-module="qr" onclick="DREAM.load('qr')" style="display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;cursor:pointer;">
+                    <span style="font-size:1.5rem;">📷</span>
+                    <span style="font-size:0.65rem;">Scanner</span>
+                </button>
+                <button class="nav-item" data-module="settings" onclick="DREAM.load('settings')" style="display:flex;flex-direction:column;align-items:center;background:none;border:none;color:#94a3b8;cursor:pointer;">
+                    <span style="font-size:1.5rem;">⚙️</span>
+                    <span style="font-size:0.65rem;">Settings</span>
+                </button>
+            </nav>
+        </footer>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div id="toast-container"></div>
+
+    <!-- ════════════════════════════════════════════
+         DREAM GLOBAL OBJECT (DENGAN ABSOLUTE PATH)
+         ════════════════════════════════════════════ -->
+    <script>
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            if (!container) { console.log('[TOAST]', message, type); return; }
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duration);
+        }
+
+        window.DREAM = {
+            version: '2026.1.0',
+            env: 'production',
+            config: {
+                modules: {
+                    'home': '/modules/home/module.js',
+                    'sekuriti': '/modules/sekuriti/module.js',
+                    'qr': '/modules/qr/module.js',
+                    'settings': '/modules/settings/module.js',
+                    'ghost': '/modules/ghost/module.js',
+                    'ai-panel': '/modules/ai-panel/module.js',
+                    'login': '/modules/login/module.js'
+                },
+                supabase: { 
+                    url: 'https://pvznaeppaagylwddirla.supabase.co', 
+                    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2em5hZXBwYWFneWx3ZGRpcmxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTEwNDMsImV4cCI6MjA4NzUyNzA0M30.t9SJi3VfsBDkKmeZ3egZ4rbvljl4xe0WwNkPtfA9-vo'
+                },
+                api: {
+                    prayerTime: 'https://api.aladhan.com/v1/timingsByCity'
+                }
+            },
+            state: {
+                currentModule: 'home',
+                user: null,
+                networkStatus: navigator.onLine,
+                deviceId: null,
+                deviceFingerprint: null
+            },
+            modules: new Map(),
+            cache: new Map(),
+            load: function(moduleName) {
+                console.log('[DREAM.load]', moduleName);
+                if (window.app && typeof window.app.loadModule === 'function') {
+                    return window.app.loadModule(moduleName);
+                }
+                console.warn('[DREAM] App not initialized yet');
+            },
+            showToast: showToast,
+            trackEvent: function(eventName, data) {
+                console.log('[ANALYTICS]', eventName, data);
+            },
+            utils: {
+                log: function(level, message) {
+                    const logs = JSON.parse(localStorage.getItem('dreamos-logs') || '[]');
+                    logs.push({ timestamp: new Date().toISOString(), level, message });
+                    if (logs.length > 1000) logs.shift();
+                    localStorage.setItem('dreamos-logs', JSON.stringify(logs));
+                    console.log(`[${level}] ${message}`);
+                }
+            }
+        };
+        console.log('✅ [DREAM] Ready');
+        window.openAIPanel = function() {
+            if (window.DREAM?.load) {
+                window.DREAM.load('ai-panel');
+                window.DREAM.showToast('🤖 Membuka AI Panel...', 'info');
+            }
+        };
+    </script>
+
+    <!-- Ghost Activation (5 taps) -->
+    <script>
+        (function() {
+            let tapCount = 0;
+            const header = document.getElementById('app-header');
+            if (header) {
+                header.addEventListener('click', () => {
+                    tapCount++;
+                    if (tapCount === 5) {
+                        tapCount = 0;
+                        const pwd = prompt('👻 Developer access:');
+                        if (pwd === 'dreamos2026') {
+                            if (window.DREAM.state.user) {
+                                window.DREAM.load('ghost');
+                            } else {
+                                window.DREAM.load('login');
+                            }
+                        } else {
+                            alert('Access denied');
+                        }
+                    }
+                    setTimeout(() => tapCount = 0, 3000);
+                });
+            }
+        })();
+    </script>
+
+    <!-- Error Handler -->
+    <script>
+        window.addEventListener('error', (event) => {
+            console.error('[GLOBAL ERROR]', event.error);
+            const errorBoundary = document.getElementById('error-boundary');
+            const errorMessage = document.getElementById('error-message');
+            if (errorBoundary && errorMessage) {
+                errorMessage.textContent = event.error?.message || 'Unknown error';
+                errorBoundary.style.display = 'flex';
+            }
+            if (window.DREAM?.utils) {
+                window.DREAM.utils.log('ERROR', event.error?.message || 'Unknown');
+            }
+        });
+        window.addEventListener('unhandledrejection', (event) => {
+            console.error('[UNHANDLED REJECTION]', event.reason);
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const loading = document.getElementById('loading-screen');
+                if (loading) {
+                    loading.classList.add('hidden');
+                    setTimeout(() => loading.remove(), 500);
+                }
+            }, 1000);
+        });
+    </script>
+
+    <!-- UTILITY SCRIPTS -->
+    <script src="js/utils/prayer-time.js" defer></script>
+    <script src="js/utils/battery-monitor.js" defer></script>
+    <script src="js/utils/network-monitor.js" defer></script>
+    <script src="js/utils/storage.js" defer></script>
+    <script src="js/utils/camera-scanner.js" defer></script>
+    <script src="js/utils/device-fingerprint.js" defer></script>
+    <script src="js/utils/geofencing.js" defer></script>
+    <script src="js/utils/system-monitor.js" defer></script>
+    <script src="js/utils/smart-printer.js" defer></script>
+    <script src="js/utils/nfc-scanner.js" defer></script>
+
+    <!-- MAIN MODULES -->
+    <script type="module" src="js/dream-core.js"></script>
+    <script type="module" src="js/ai-orchestrator.js"></script>
+
+    <!-- SKIP LINK -->
+    <a href="#core-module-container" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+</body>
+  </html>
