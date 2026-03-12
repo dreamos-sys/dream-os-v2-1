@@ -640,42 +640,158 @@ window.DREAM = {
                 });
             }
             this.showToast('Cache cleared', 'success');
+    <!-- ════════════════════════════════════════════
+     1. DREAM GLOBAL OBJECT (FIXED!)
+     ════════════════════════════════════════════ -->
+<script>
+    window.DREAM = {
+        version: '2026.1.0',
+        env: 'production',
+        
+        // ✅ CONFIG DENGAN MODULES
+        config: {
+            modules: {
+                'home': './modules/home/module.js',
+                'sekuriti': './modules/sekuriti/module.js',
+                'qr': './modules/qr/module.js',
+                'settings': './modules/settings/module.js',
+                'ghost': './modules/ghost/module.js',      // ✅ GHOST TERDAFTAR!
+                'ai-panel': './modules/ai-panel/module.js'
+            },
+            supabase: { 
+                url: 'https://pvznaeppaagylwddirla.supabase.co', 
+                key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2em5hZXBwYWFneWx3ZGRpcmxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTEwNDMsImV4cCI6MjA4NzUyNzA0M30.t9SJi3VfsBDkKmeZ3egZ4rbvljl4xe0WwNkPtfA9-vo' 
+            },
+            api: {
+                prayerTime: 'https://api.aladhan.com/v1/timingsByCity',
+                quran: 'https://api.alquran.cloud/v1'
+            }
+        },
+        
+        // ✅ MODULE PATHS (DUPLICATE - PAKAI SALAH SATU SAJA)
+        modulePaths: {
+            'home': './modules/home/module.js',
+            'sekuriti': './modules/sekuriti/module.js',
+            'qr': './modules/qr/module.js',
+            'settings': './modules/settings/module.js',
+            'ghost': './modules/ghost/module.js',
+            'ai-panel': './modules/ai-panel/module.js'
+        },
+        
+        state: {
+            currentModule: 'home',
+            user: null,
+            session: null,
+            prayerTimes: null,
+            networkStatus: navigator.onLine,
+            batteryLevel: null,
+            lastSync: null,
+            theme: 'dark',
+            language: 'id'
+        },
+                modules: new Map(),
+        cache: new Map(),
+        
+        utils: {
+            log: function(level, message) {
+                const logs = JSON.parse(localStorage.getItem('dreamos-logs') || '[]');
+                logs.push({
+                    timestamp: new Date().toISOString(),
+                    level: level,
+                    message: message,
+                    module: this.state.currentModule
+                });
+                if (logs.length > 1000) logs.shift();
+                localStorage.setItem('dreamos-logs', JSON.stringify(logs));
+                console.log(`[${level}] ${message}`);
+            },
+            clearCache: function() {
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        for (let name of names) caches.delete(name);
+                    });
+                }
+                this.showToast('Cache cleared', 'success');
+            }
+        },
+        
+        load: function(moduleName, params) {
+            console.log('[DREAM.load]', moduleName);
+            if (window.app && typeof window.app.loadModule === 'function') {
+                return window.app.loadModule(moduleName, params);
+            }
+            console.warn('[DREAM] App not initialized yet');
+        },
+        
+        showToast: function(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toast-container');
+            if (!container) { console.log('[TOAST]', message, type); return; }
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duration);
+        },
+        
+        trackEvent: function(eventName, data = {}) {
+            console.log('[ANALYTICS]', eventName, data);
+            if (window.ANALYTICS) { window.ANALYTICS.track(eventName, data); }
         }
-    },
-    
-    load: function(moduleName, params) {
-        console.log('[DREAM.load]', moduleName);
-        if (window.app && typeof window.app.loadModule === 'function') {
-            return window.app.loadModule(moduleName, params);
-        }
-        console.warn('[DREAM] App not initialized yet');
-    },
-    
-    showToast: function(message, type = 'info', duration = 3000) {
-        const container = document.getElementById('toast-container');
-        if (!container) { console.log('[TOAST]', message, type); return; }
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        toast.innerHTML = `<span>${message}</span>`;
-        container.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, duration);
-    },
-    
-    trackEvent: function(eventName, data = {}) {
-        console.log('[ANALYTICS]', eventName, data);
-        if (window.ANALYTICS) { window.ANALYTICS.track(eventName, data); }
-    }
-};
-console.log('✅ [DREAM] Global object initialized');
-console.log('🕌 Dream OS 2026 Version:', window.DREAM.version);
-console.log('👻 Ghost Module:', window.DREAM.config?.modules?.ghost || window.DREAM.modulePaths?.ghost);
+    };
+        console.log('✅ [DREAM] Global object initialized');
+    console.log('🕌 Dream OS 2026 Version:', window.DREAM.version);
+    console.log('👻 Ghost Module:', window.DREAM.config?.modules?.ghost || window.DREAM.modulePaths?.ghost);
 
-window.openAIPanel = function() {
-    if (window.DREAM && typeof window.DREAM.load === 'function') {
-        window.DREAM.load('ai-panel');
-        window.DREAM.showToast('🤖 Membuka AI Panel...', 'info');
+    window.openAIPanel = function() {
+        if (window.DREAM && typeof window.DREAM.load === 'function') {
+            window.DREAM.load('ai-panel');
+            window.DREAM.showToast('🤖 Membuka AI Panel...', 'info');
+        }
+    };
+</script>  <!-- ✅ PENUTUP SCRIPT TAG! -->
+
+<!-- ════════════════════════════════════════════
+     2. GLOBAL ERROR HANDLER (WITH LOGGING)
+     ════════════════════════════════════════════ -->
+<script>  <!-- ✅ SCRIPT TAG BARU DIBUKA -->
+    window.addEventListener('error', (event) => {
+        console.error('[GLOBAL ERROR]', event.error);
+        const errorBoundary = document.getElementById('error-boundary');
+        const errorMessage = document.getElementById('error-message');
+        if (errorBoundary && errorMessage) {
+            errorMessage.textContent = event.error?.message || 'An unexpected error occurred';
+            errorBoundary.style.display = 'flex';
+        }
+        if (window.DREAM && window.DREAM.utils) {
+            window.DREAM.utils.log('ERROR', event.error?.message || 'Unknown error');
+        }
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('[UNHANDLED REJECTION]', event.reason);
+        if (window.DREAM && window.DREAM.utils) {
+            window.DREAM.utils.log('ERROR', 'Unhandled rejection: ' + event.reason);
+        }
+    });
+
+    if ('serviceWorker' in navigator && location.protocol === 'https:') {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js')
+                .then(reg => console.log('[SW] Registered:', reg.scope))
+                .catch(err => console.warn('[SW] Registration failed:', err));
+        });
     }
-};
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('[APP] DOM Ready');
+        setTimeout(() => {
+            const loadingScreen = document.getElementById('loading-screen');
+            if (loadingScreen) {
+                loadingScreen.classList.add('hidden');                setTimeout(() => loadingScreen.remove(), 500);
+            }
+        }, 1000);
+    });
+</script>  <!-- ✅ PENUTUP SCRIPT TAG! -->
 
     <!-- ════════════════════════════════════════════
          2. GLOBAL ERROR HANDLER (WITH LOGGING)
