@@ -252,6 +252,12 @@ function addNavHoverEffects() {
                 item.style.color = '#64748b';
             }
         });
+
+        // Di dalam bottom navigation, tambahkan tombol baru
+<button class="nav-item" data-module="booking" onclick="DREAM.load('booking')">
+    <i class="fas fa-calendar-alt"></i>
+    <span>Booking</span>
+</button>
     });
 }
 
