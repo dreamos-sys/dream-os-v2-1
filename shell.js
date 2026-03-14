@@ -1,4 +1,4 @@
-import './core.js'; // Import Smart Core v18.0
+import './core.js'; 
 
 class SovereignShell {
     constructor() { 
@@ -6,39 +6,62 @@ class SovereignShell {
         this.init(); 
     }
     
-    init() {
-        window.DREAM = this;
-        // Inisialisasi StealthCore dari core.js
-        window.StealthCore = new GhostStealthEngine();
+    async init() {
+        window.DREAM = this; // Menetapkan global object segera
         
+        // Memastikan Ghost Trigger aktif kembali
         const trigger = document.getElementById('ghost-header-trigger');
-        if(trigger) trigger.onclick = () => this.handleGhostClick();
-        
-        setTimeout(() => this.load('home'), 800);
-    }
+        if(trigger) {
+            trigger.style.pointerEvents = 'auto'; 
+            trigger.onclick = () => this.handleGhostClick();
+        }
 
-    handleGhostClick() {
-        this.ghostCounter++;
-        this.haptic(50);
-        if(this.ghostCounter >= 5) {
-            this.ghostCounter = 0;
-            this.load('ghost'); // Panel Monitoring/Brain Hub
+        // Jalankan loader secara paksa jika terjadi error
+        try {
+            await this.load('home');
+        } catch (e) {
+            console.error("Critical Boot Error:", e);
+            this.forceReveal(); // Jalankan protokol darurat jika stuck
         }
     }
 
     async load(key) {
+        const vp = document.getElementById('root-viewport');
+        const loader = document.getElementById('system-loader');
+        const nav = document.getElementById('main-nav');
+
         try {
             const { default: render } = await import(`./modules/${key}/index.js?v=${Date.now()}`);
-            const vp = document.getElementById('root-viewport');
             vp.innerHTML = '';
-            render({ container: vp, role: localStorage.getItem('userRole') || 'erwinsyah' });
-            document.getElementById('system-loader').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
-        } catch (e) {
-            console.error("Kernel Error:", e);
+            await render({ container: vp, role: 'admin' });
+            
+            // Tutup loader & tampilkan navigasi
+            if(loader) loader.style.opacity = '0';
+            setTimeout(() => { 
+                if(loader) loader.style.display = 'none';
+                if(nav) nav.style.display = 'flex';
+            }, 500);
+
+        } catch (err) {
+            this.forceReveal();
+            throw err;
         }
     }
 
-    haptic(ms) { if(navigator.vibrate) navigator.vibrate(ms); }
+    forceReveal() {
+        document.getElementById('system-loader').style.display = 'none';
+        document.getElementById('main-nav').style.display = 'flex';
+        document.getElementById('root-viewport').innerHTML = '<p style="color:white; text-align:center; padding-top:50px;">Bismillah, System Restored via Emergency Protocol.</p>';
+    }
+
+    handleGhostClick() {
+        this.ghostCounter++;
+        if(navigator.vibrate) navigator.vibrate(50);
+        if(this.ghostCounter >= 5) {
+            this.ghostCounter = 0;
+            this.load('ghost'); 
+        }
+    }
 }
+
 new SovereignShell();
