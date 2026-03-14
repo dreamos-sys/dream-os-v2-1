@@ -1,6 +1,6 @@
 /**
- * DREAM OS KERNEL v13.9 - FINAL MASTER BUILD
- * Features: Dynamic Pathing, Auto-Recovery, Ghost Protection
+ * DREAM OS KERNEL v13.9.1 - RESILIENT BUILD
+ * Perbaikan: Null-check pada DOM Element untuk mencegah kernel crash
  */
 
 const MODULES = {
@@ -20,26 +20,43 @@ class SovereignShell {
 
     init() {
         window.DREAM = this;
-        setTimeout(() => this.load('home'), 800);
         
-        const trigger = document.getElementById('ghost-trigger-header');
-        trigger.onclick = () => this.handleGhostClick();
+        // Perbaikan: Pastikan DOM sudah siap sebelum mencari trigger
+        document.addEventListener('DOMContentLoaded', () => {
+            const trigger = document.getElementById('ghost-trigger-header');
+            if (trigger) {
+                trigger.onclick = () => this.handleGhostClick();
+            } else {
+                console.warn("Ghost trigger element not found in DOM");
+            }
+        });
+
+        // Load Home module dengan sedikit delay agar UI Loader terlihat cantik
+        setTimeout(() => this.load('home'), 1000);
     }
 
     async load(key) {
         try {
-            const fullPath = `${this.basePath}/${MODULES[key]}?v=${Date.now()}`;
+            const path = MODULES[key];
+            const fullPath = `${this.basePath}/${path}?v=${Date.now()}`;
+            
             const { default: renderModule } = await import(fullPath);
             
             const viewport = document.getElementById('root-viewport');
-            viewport.innerHTML = '';
-            await renderModule({ container: viewport });
-            
-            document.getElementById('system-loader').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
+            if (viewport) {
+                viewport.innerHTML = '';
+                await renderModule({ container: viewport });
+                
+                // Sembunyikan Loader & Tampilkan Navigasi
+                const loader = document.getElementById('system-loader');
+                const nav = document.getElementById('main-nav');
+                if (loader) loader.style.display = 'none';
+                if (nav) nav.style.display = 'flex';
+            }
         } catch (err) {
-            console.error("Kernel Error:", err);
-            document.getElementById('system-loader').innerHTML = "SYSTEM ERROR - CHECK CONSOLE";
+            console.error("Kernel Load Error:", err);
+            const loader = document.getElementById('system-loader');
+            if (loader) loader.innerHTML = `<div class="p-10 text-red-500">SYSTEM ERROR: ${err.message}</div>`;
         }
     }
 
@@ -54,4 +71,5 @@ class SovereignShell {
 
     haptic(ms) { if (navigator.vibrate) navigator.vibrate(ms); }
 }
+
 new SovereignShell();
