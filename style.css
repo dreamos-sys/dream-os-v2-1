@@ -1,0 +1,54 @@
+:root {
+    --primary: #10b981;
+    --bg-system: #f8fafc;
+    --surface: #ffffff;
+    --text: #0f172a;
+}
+
+body {
+    margin: 0; padding: 0; font-family: 'Inter', sans-serif;
+    background: var(--bg-system); height: 100vh; overflow: hidden;
+}
+
+/* GHOST TRIGGER - FIXED OVERLAY */
+#ghost-trigger-header {
+    position: fixed; top: 0; left: 0; width: 100%; height: 75px;
+    z-index: 2147483647; background: transparent;
+}
+
+/* LOCKDOWN SCREEN */
+#lockdown-screen {
+    position: fixed; inset: 0; background: rgba(2, 6, 23, 0.98);
+    z-index: 2147483647; display: flex; align-items: center; justify-content: center;
+    color: #ef4444; text-align: center;
+}
+.lockdown-content i { font-size: 4rem; margin-bottom: 20px; }
+
+/* LOADER */
+#system-loader {
+    position: fixed; inset: 0; background: #020617;
+    z-index: 10000; display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.5s;
+}
+.loader-content { color: white; text-align: center; }
+.bismillah { color: var(--primary); font-size: 10px; letter-spacing: 2px; }
+.logo-text { font-weight: 200; letter-spacing: 8px; }
+.loader-bar { width: 100px; height: 1px; background: var(--primary); margin: 20px auto; }
+
+/* NAV */
+.bottom-nav {
+    position: fixed; bottom: 0; width: 100%; height: 75px;
+    background: var(--surface); display: flex; align-items: center;
+    justify-content: space-around; border-top: 1px solid #e2e8f0; z-index: 1000;
+}
+.nav-item { color: #94a3b8; font-size: 10px; text-align: center; }
+.nav-item.active { color: var(--primary); }
+.nav-item i { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+
+.nav-center { position: relative; top: -20px; }
+.shalawat-btn {
+    width: 60px; height: 60px; background: var(--primary);
+    border-radius: 50%; color: white; display: flex;
+    align-items: center; justify-content: center;
+    border: 4px solid var(--surface); box-shadow: 0 4px 15px rgba(16,185,129,0.3);
+}
