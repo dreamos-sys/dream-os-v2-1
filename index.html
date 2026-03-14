@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dream OS v13.9 - Sovereign LUX</title>
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans">
+
+    <div id="ghost-trigger-header"></div>
+
+    <div id="system-loader" class="fixed inset-0 flex items-center justify-center bg-slate-950 z-[10000]">
+        <div class="text-center">
+            <div class="text-emerald-500 text-xs mb-2">Bismillah bi idznillah</div>
+            <h1 class="text-2xl font-light tracking-[0.5rem]">DREAM OS</h1>
+            <div class="w-24 h-[1px] bg-emerald-500 mx-auto mt-4"></div>
+        </div>
+    </div>
+
+    <main id="root-viewport" class="p-0"></main>
+
+    <nav class="bottom-nav fixed bottom-0 w-full h-20 bg-white border-t border-slate-200 flex items-center justify-around z-[1000]" id="main-nav" style="display: none;">
+        <div class="nav-item text-slate-400 text-[10px] text-center" onclick="DREAM.load('home')">
+            <i class="fa-solid fa-house text-xl block mb-1"></i><span>Home</span>
+        </div>
+        <div class="nav-item text-slate-400 text-[10px] text-center" onclick="DREAM.load('k3')">
+            <i class="fa-solid fa-triangle-exclamation text-xl block mb-1"></i><span>K3</span>
+        </div>
+        <div class="relative -top-6">
+            <div class="shalawat-btn w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white cursor-pointer" onclick="DREAM.haptic(100)">صلوات</div>
+        </div>
+        <div class="nav-item text-slate-400 text-[10px] text-center" onclick="DREAM.load('asset')">
+            <i class="fa-solid fa-boxes-stacked text-xl block mb-1"></i><span>Aset</span>
+        </div>
+        <div class="nav-item text-slate-400 text-[10px] text-center" onclick="DREAM.load('settings')">
+            <i class="fa-solid fa-gear text-xl block mb-1"></i><span>Sistem</span>
+        </div>
+    </nav>
+
+    <script src="shell.js" type="module"></script>
+</body>
+</html>
