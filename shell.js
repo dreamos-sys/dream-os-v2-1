@@ -1,32 +1,27 @@
-const MODULES = {
-    'home': 'modules/home/index.js',
-    'ghost': 'modules/ghost/brain-hub.js'
-};
-
 class SovereignShell {
-    constructor() {
-        this.ghostCounter = 0;
-        this.init();
-    }
+    constructor() { this.ghostCounter = 0; this.init(); }
     init() {
         window.DREAM = this;
-        const trigger = document.getElementById('ghost-trigger-header');
-        if(trigger) trigger.onclick = () => this.handleGhostClick();
-        setTimeout(() => this.load('home'), 1000);
+        document.getElementById('ghost-trigger-header').onclick = () => this.handleGhostClick();
+        setTimeout(() => this.load('home'), 800);
     }
     async load(key) {
-        try {
-            const { default: render } = await import(`./${MODULES[key]}?v=${Date.now()}`);
-            const vp = document.getElementById('root-viewport');
-            vp.innerHTML = '';
-            await render({ container: vp });
-            document.getElementById('system-loader').style.display = 'none';
-            document.getElementById('main-nav').style.display = 'flex';
-        } catch(e) { console.error(e); }
+        const { default: render } = await import(`./modules/${key}/index.js?v=${Date.now()}`);
+        const vp = document.getElementById('root-viewport');
+        vp.innerHTML = '';
+        await render({ container: vp });
+        document.getElementById('system-loader').style.display = 'none';
+        document.getElementById('main-nav').style.display = 'flex';
     }
     handleGhostClick() {
         this.ghostCounter++;
-        if(this.ghostCounter >= 5) { this.ghostCounter = 0; this.load('ghost'); }
+        this.haptic(50);
+        if(this.ghostCounter >= 5) {
+            this.ghostCounter = 0;
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark';
+            this.load('ghost'); // Panel Monitoring
+        }
     }
     haptic(ms) { if(navigator.vibrate) navigator.vibrate(ms); }
 }
