@@ -1,6 +1,3 @@
-/**
- * FINAL DASHBOARD RENDERER v14.0
- */
 export default async function render({ container }) {
     const menus = [
         { icon: 'fa-chart-pie', label: 'Command', color: 'emerald' },
@@ -16,17 +13,16 @@ export default async function render({ container }) {
 
     container.innerHTML = `
         <div class="max-w-md mx-auto pt-6 pb-24">
-            <div class="px-4 mb-4 font-bold text-slate-400 text-sm">MAIN COMMAND CENTER</div>
             <div class="p-4 grid grid-cols-3 gap-3">
                 ${menus.map(m => `
-                    <div class="bg-white p-4 rounded-2xl shadow-sm text-center border border-slate-100 cursor-pointer hover:scale-95 transition-transform">
+                    <div class="bg-white p-4 rounded-2xl shadow-sm text-center border border-slate-100 cursor-pointer">
                         <i class="fa-solid ${m.icon} text-${m.color}-500 text-2xl mb-2"></i>
                         <div class="text-[10px] font-bold text-slate-700">${m.label}</div>
                     </div>
                 `).join('')}
             </div>
             <div class="px-4">
-                <button class="w-full bg-red-500 text-white p-4 rounded-xl font-black shadow-lg">LOGOUT</button>
+                <button class="w-full bg-red-500 text-white p-4 rounded-xl font-black">LOGOUT</button>
             </div>
         </div>
     `;
