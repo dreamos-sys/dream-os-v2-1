@@ -1,31 +1,21 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dream OS v16.0</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' };
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else { document.documentElement.classList.remove('dark'); }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body class="bg-slate-50 dark:bg-[#020617] transition-colors duration-500">
-    <div id="ghost-trigger-header" class="fixed top-0 right-0 w-20 h-20 z-[9999] cursor-pointer"></div>
-    <div id="system-loader" class="fixed inset-0 flex items-center justify-center bg-slate-50 dark:bg-[#020617] z-[10000]">
-        <h1 class="text-slate-900 dark:text-emerald-500 text-2xl tracking-[0.5rem] font-light">DREAM OS</h1>
+<div id="system-loader">
+    <div class="loader-content">
+        <div class="bismillah">Bismillah bi idznillah</div>
+        <h1 class="logo-text">DREAM OS</h1>
+        <div class="loader-bar"></div>
     </div>
-    <main id="root-viewport"></main>
-    <nav id="main-nav" class="fixed bottom-0 w-full h-20 bg-white dark:bg-[#0f172a] border-t border-slate-200 dark:border-slate-800 flex items-center justify-around z-[1000] hidden">
-        <div class="text-slate-400 text-center" onclick="DREAM.load('home')"><i class="fa-solid fa-house text-xl"></i></div>
-        <div class="text-slate-400 text-center" onclick="DREAM.load('k3')"><i class="fa-solid fa-triangle-exclamation text-xl"></i></div>
-        <div class="relative -top-6"><div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg cursor-pointer" onclick="DREAM.haptic(100)">صلوات</div></div>
-        <div class="text-slate-400 text-center" onclick="DREAM.load('asset')"><i class="fa-solid fa-boxes-stacked text-xl"></i></div>
-        <div class="text-slate-400 text-center" onclick="DREAM.load('settings')"><i class="fa-solid fa-gear text-xl"></i></div>
-    </nav>
-    <script src="shell.js" type="module"></script>
-</body>
-</html>
+</div>
+
+<script>
+    setTimeout(() => {
+        const loader = document.getElementById('system-loader');
+        if (loader && loader.style.display !== 'none') {
+            console.warn("Bypassing stuck loader...");
+            loader.style.opacity = '0';
+            setTimeout(() => { 
+                loader.style.display = 'none';
+                document.getElementById('main-nav').style.display = 'flex';
+            }, 500);
+        }
+    }, 2500); // Paksa terbuka setelah 2.5 detik
+</script>
