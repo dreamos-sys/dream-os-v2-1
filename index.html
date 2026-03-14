@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dream OS v14.1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-900">
+
+    <div id="ghost-trigger-header" class="fixed top-0 right-0 w-20 h-20 z-[999999] bg-transparent cursor-pointer"></div>
+
+    <div id="system-loader" class="fixed inset-0 flex items-center justify-center bg-slate-950 z-[10000]">
+        <h1 class="text-white text-2xl tracking-[0.5rem]">DREAM OS</h1>
+    </div>
+
+    <main id="root-viewport"></main>
+
+    <nav id="main-nav" class="fixed bottom-0 w-full h-20 bg-white border-t border-slate-200 flex items-center justify-around z-[1000] hidden">
+        <div class="nav-item text-slate-400 text-center" onclick="DREAM.load('home')"><i class="fa-solid fa-house text-xl"></i><span class="text-[10px] block">Home</span></div>
+        <div class="nav-item text-slate-400 text-center" onclick="DREAM.load('k3')"><i class="fa-solid fa-triangle-exclamation text-xl"></i><span class="text-[10px] block">K3</span></div>
+        <div class="relative -top-6">
+            <div class="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white cursor-pointer" onclick="DREAM.haptic(100)">صلوات</div>
+        </div>
+        <div class="nav-item text-slate-400 text-center" onclick="DREAM.load('asset')"><i class="fa-solid fa-boxes-stacked text-xl"></i><span class="text-[10px] block">Aset</span></div>
+        <div class="nav-item text-slate-400 text-center" onclick="DREAM.load('settings')"><i class="fa-solid fa-gear text-xl"></i><span class="text-[10px] block">Sistem</span></div>
+    </nav>
+
+    <script src="shell.js" type="module"></script>
+</body>
+</html>
