@@ -1,0 +1,24 @@
+/* GHOST TRIGGER - Diperbaiki agar tidak memblokir tombol lain */
+#ghost-trigger-header {
+    position: fixed; top: 0; right: 0; 
+    width: 60px; height: 60px; 
+    z-index: 2147483647; 
+    background: transparent;
+    pointer-events: all; /* Hanya aktif di area pojok kanan atas */
+}
+
+/* Bento Grid System */
+.bento-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; padding: 1rem;
+}
+.bento-card {
+    background: #ffffff; padding: 1.5rem; border-radius: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+}
+.bento-large { grid-column: span 2; }
+
+/* Loader Fix */
+#system-loader {
+    position: fixed; inset: 0; background: #020617;
+    z-index: 10000; display: flex; align-items: center; justify-content: center;
+}
