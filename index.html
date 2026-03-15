@@ -2,54 +2,649 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=no">
-    <title>Dream OS v2.1 - Sovereign Enterprise</title>
-    
-    <!-- Fonts & Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#10b981">
+    <title>DREAM OS v2.1 | THE POWER SOUL</title>
+
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Core CSS - PATH SUDAH FIX! -->
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=Noto+Sans+Arabic:wght@700;900&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- CORE CSS - PENTING! -->
     <link rel="stylesheet" href="./core/engine.css">
-    
-    <!-- Theme Manager - PATH SUDAH FIX! (Capital U) -->
-    <script type="module" src="./js/Utils/theme-manager.js"></script>
+
+    <style>
+        * { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background: #020617; color: #e2e8f0; overflow-x: hidden; margin: 0; }
+        .font-arabic { font-family: 'Noto Sans Arabic', sans-serif; }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 20px;
+        }
+
+        /* Login Zone */
+        #login-zone {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+        }
+
+        /* Icon Card */
+        .icon-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .icon-card:active { transform: scale(0.95); }
+        .icon-card:hover { transform: translateY(-3px); }
+
+        /* Toast */        #toast-container {
+            position: fixed; top: 20px; right: 20px; z-index: 10000;
+        }
+        .toast {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            padding: 12px 24px;
+            color: #e2e8f0;
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 10px;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid #10b981;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 3px solid rgba(16,185,129,0.2);
+            border-top-color: #10b981;
+            border-radius: 50%;
+            width: 40px; height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Loading Screen */
+        #loading-screen {
+            position: fixed; inset: 0; background: #020617;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.5s;
+        }
+        #loading-screen.hide { opacity: 0; pointer-events: none; }
+
+        /* Module Window */
+        #module-window {
+            position: fixed; inset: 0; z-index: 1000;
+            background: #020617; overflow-y: auto;
+            display: none;
+        }
+        #module-window.active { display: block; }
+
+        /* Slider dots */
+        .dot-slide {
+            width: 8px; height: 8px; border-radius: 50%;            background: #64748b; transition: all 0.3s; cursor: pointer;
+        }
+        .dot-slide.active { background: #10b981; transform: scale(1.3); }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.02); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 15px rgba(16,185,129,0.3); }
+            50% { text-shadow: 0 0 30px rgba(16,185,129,0.5); }
+        }
+        .animate-glow { animation: glow 3s ease-in-out infinite; }
+
+        .animate-up { animation: fadeUp 0.6s ease-out forwards; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
+
     <!-- Loading Screen -->
     <div id="loading-screen">
         <div style="text-align:center;">
-            <div class="loader"></div>
-            <p style="margin-top:1rem;color:var(--color-primary);font-size:0.875rem;">Bismillah bi idznillah</p>
-            <h1 style="margin-top:0.5rem;color:var(--text-primary);font-size:2rem;letter-spacing:2px;">DREAM OS</h1>
-            <p style="margin-top:0.5rem;color:var(--text-muted);font-size:0.75rem;">v2.1 Sovereign Enterprise</p>
+            <div class="spinner"></div>
+            <p style="margin-top:1rem;color:#10b981;font-size:0.875rem;">Bismillah bi idznillah</p>
+            <h1 style="margin-top:0.5rem;color:#e2e8f0;font-size:2rem;letter-spacing:2px;">DREAM OS</h1>
+            <p style="margin-top:0.5rem;color:#94a3b8;font-size:0.75rem;">v2.1 Sovereign Enterprise</p>
         </div>
     </div>
 
     <!-- Toast Container -->
     <div id="toast-container"></div>
 
-    <!-- App Shell -->
-    <div id="app-shell"></div>
+    <!-- ========== LOGIN ZONE ========== -->
+    <div id="login-zone">
+        <div class="glass-card" style="max-width:400px;width:90%;padding:2rem;text-align:center;">
+            <!-- Logo -->
+            <div style="width:80px;height:80px;margin:0 auto 1rem;">
+                <img src="1001060756.png" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none'">
+            </div>
 
-    <!-- Main Shell Script -->
-    <script src="./shell.js"></script>
-    
-    <!-- AI Core Scripts -->
-    <script src="./js/ai-orchestrator.js"></script>
-    <script src="./js/ai-core/ai-config.js"></script>
-    <script src="./js/ai-core/ai-voice.js"></script>
-    <script src="./js/ai/dream-ai-core.js"></script>
-    
-    <!-- Kernel Scripts -->
-    <script src="./js/kernel/diagnostic.js"></script>
-    <script src="./sovereign-kernel.js"></script>
-    
-    <!-- Core JS -->
-    <script src="./js/dream-global.js"></script>
-    <script src="./js/dream-core.js"></script>
-    <script src="./js/core.js"></script>
-    <script src="./js/brain-hub.js"></script>
-    <script src="./js/dream-final-polish.js"></script>
+            <div style="margin-bottom:1rem;">
+                <span style="background:rgba(16,185,129,0.2);color:#10b981;padding:4px 12px;border-radius:20px;font-size:10px;font-family:'JetBrains Mono',monospace;border:1px solid rgba(16,185,129,0.3);">v2.1 MASTER</span>
+            </div>
+            <div class="font-arabic" style="font-size:2rem;color:#10b981;margin-bottom:0.5rem;" dir="rtl">بِسْمِ اللَّهِ</div>
+            <p style="font-size:9px;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.5rem;">The Power Soul of Shalawat</p>
+
+            <!-- Password Input -->
+            <div style="position:relative;margin-bottom:1.5rem;">
+                <input type="password" id="access-key" placeholder=" " style="width:100%;background:rgba(30,41,59,0.8);border:2px solid rgba(51,65,85,0.5);border-radius:12px;padding:12px 16px;color:#e2e8f0;font-size:14px;font-family:'JetBrains Mono',monospace;outline:none;transition:border-color 0.2s;">
+                <label for="access-key" style="position:absolute;left:16px;top:-10px;background:#0f172a;padding:0 8px;font-size:10px;color:#10b981;font-weight:700;text-transform:uppercase;letter-spacing:1px;">Master Key</label>
+                <i id="toggleEye" class="fas fa-eye" style="position:absolute;right:16px;top:50%;transform:translateY(-50%);color:#64748b;cursor:pointer;" onclick="togglePass(this)"></i>
+            </div>
+
+            <!-- Login Button -->
+            <button id="btnLogin" onclick="checkAccess()" style="width:100%;background:linear-gradient(135deg,#10b981,#059669);color:white;border:none;padding:12px;border-radius:12px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1px;cursor:pointer;transition:all 0.2s;">
+                Verifikasi Akses
+            </button>
+
+            <!-- Error -->
+            <p id="error-msg" style="color:#ef4444;font-size:9px;margin-top:1rem;opacity:0;font-weight:700;text-transform:uppercase;letter-spacing:1px;"></p>
+            <p id="lockout-timer" style="color:#f59e0b;font-size:10px;margin-top:1rem;display:none;font-weight:700;"></p>
+
+            <div style="margin-top:2rem;font-size:8px;color:#475569;font-family:'JetBrains Mono',monospace;">
+                <p>🔐 ISO 27001 Certified Access Control</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN APP SHELL ========== -->
+    <div id="app-shell" class="hidden" style="max-width:1200px;margin:0 auto;padding-bottom:100px;">
+
+        <!-- Header -->
+        <header class="glass-card" style="margin:1rem;padding:1.5rem;">
+            <!-- Shalawat Slider -->
+            <div id="shalawat-slider" style="height:64px;display:flex;flex-direction:column;justify-content:center;align-items:center;margin-bottom:1rem;"></div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-4 gap-3" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1rem;">
+                <div class="glass-card" style="background:rgba(15,23,42,0.7);padding:12px;text-align:center;">
+                    <p style="font-size:8px;color:#94a3b8;text-transform:uppercase;font-weight:700;">Booking</p>
+                    <p id="stat-booking" style="font-size:1.25rem;font-weight:700;color:#10b981;">0</p>
+                </div>
+                <div class="glass-card" style="background:rgba(15,23,42,0.7);padding:12px;text-align:center;">
+                    <p style="font-size:8px;color:#94a3b8;text-transform:uppercase;font-weight:700;">K3</p>
+                    <p id="stat-k3" style="font-size:1.25rem;font-weight:700;color:#f59e0b;">0</p>
+                </div>
+                <div class="glass-card" style="background:rgba(15,23,42,0.7);padding:12px;text-align:center;">
+                    <p style="font-size:8px;color:#94a3b8;text-transform:uppercase;font-weight:700;">Dana</p>
+                    <p id="stat-dana" style="font-size:1.25rem;font-weight:700;color:#a855f7;">0</p>
+                </div>
+                <div class="glass-card" style="background:rgba(15,23,42,0.7);padding:12px;text-align:center;">
+                    <p style="font-size:8px;color:#94a3b8;text-transform:uppercase;font-weight:700;">Security</p>                    <p id="stat-security" style="font-size:1.25rem;font-weight:700;color:#10b981;">SAFE</p>
+                </div>
+            </div>
+
+            <!-- User Info & Clock -->
+            <div style="display:flex;justify-content:space-between;align-items:center;padding-top:1rem;border-top:1px solid rgba(51,65,85,0.3);">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <div id="user-badge" style="width:40px;height:40px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;color:#10b981;font-weight:700;font-size:12px;">?</div>
+                    <div>
+                        <h1 style="font-size:10px;color:#e2e8f0;text-transform:uppercase;font-weight:700;">User: <span id="user-display" style="color:#10b981;font-style:italic;">-</span></h1>
+                        <p style="font-size:8px;color:#64748b;font-weight:700;text-transform:uppercase;">Mode: <span id="mode-tag">-</span></p>
+                    </div>
+                </div>
+                <div id="clock" style="font-size:11px;font-weight:700;background:rgba(15,23,42,0.8);padding:8px 16px;border-radius:20px;color:#10b981;font-family:'JetBrains Mono',monospace;">00:00:00</div>
+            </div>
+        </header>
+
+        <!-- 7-SLIDE INFO PANEL -->
+        <div class="glass-card" style="margin:1rem;padding:0.5rem;overflow:hidden;position:relative;">
+            <div id="info-slider" style="display:flex;transition:transform 0.5s ease-in-out;">
+                <!-- Slide 1: Greeting -->
+                <div style="min-width:100%;padding:1.5rem;text-align:center;">
+                    <div class="font-arabic" style="font-size:2.5rem;color:#10b981;margin-bottom:0.5rem;" dir="rtl">السَّلَامُ عَلَيْكُمْ</div>
+                    <h2 style="font-size:1.25rem;color:#e2e8f0;font-weight:700;">Selamat Datang, <span id="user-name-display">Admin</span>!</h2>
+                    <p style="font-size:12px;color:#94a3b8;margin-top:0.5rem;">Silakan pilih modul yang Anda butuhkan.</p>
+                </div>
+                <!-- Slide 2: Booking -->
+                <div style="min-width:100%;padding:1.5rem;">
+                    <h3 style="font-size:14px;color:#10b981;font-weight:700;margin-bottom:0.5rem;">📅 Booking Hari Ini</h3>
+                    <div id="today-booking-list" style="max-height:128px;overflow-y:auto;font-size:10px;">
+                        <p style="color:#64748b;">Memuat...</p>
+                    </div>
+                </div>
+                <!-- Slide 3: K3 -->
+                <div style="min-width:100%;padding:1.5rem;">
+                    <h3 style="font-size:14px;color:#f59e0b;font-weight:700;margin-bottom:0.5rem;">⚠️ K3 Hari Ini</h3>
+                    <div id="today-k3-list" style="max-height:128px;overflow-y:auto;font-size:10px;">
+                        <p style="color:#64748b;">Memuat...</p>
+                    </div>
+                </div>
+                <!-- Slide 4-7: More slides -->
+                <div style="min-width:100%;padding:1.5rem;text-align:center;">
+                    <p style="color:#94a3b8;font-size:12px;">🌤️ Weather & More</p>
+                </div>
+                <div style="min-width:100%;padding:1.5rem;text-align:center;">
+                    <p style="color:#94a3b8;font-size:12px;">📢 Announcements</p>
+                </div>
+                <div style="min-width:100%;padding:1.5rem;text-align:center;">
+                    <p style="color:#94a3b8;font-size:12px;">📋 Info 1</p>
+                </div>                <div style="min-width:100%;padding:1.5rem;text-align:center;">
+                    <p style="color:#94a3b8;font-size:12px;">📋 Info 2</p>
+                </div>
+            </div>
+            <!-- Dots -->
+            <div style="display:flex;justify-content:center;gap:8px;margin-top:0.5rem;padding-bottom:0.5rem;">
+                <div class="dot-slide active"></div>
+                <div class="dot-slide"></div>
+                <div class="dot-slide"></div>
+                <div class="dot-slide"></div>
+                <div class="dot-slide"></div>
+                <div class="dot-slide"></div>
+                <div class="dot-slide"></div>
+            </div>
+        </div>
+
+        <!-- MODULE GRID -->
+        <div id="grid-container" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:1rem;"></div>
+
+        <!-- Footer -->
+        <footer style="text-align:center;padding:2rem 1rem;">
+            <p style="font-size:9px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:1px;font-style:italic;">The Power Soul of Shalawat</p>
+            <button onclick="logout()" style="background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:12px 32px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;margin-top:1rem;">Logout System</button>
+            <p style="font-size:8px;color:#475569;margin-top:1.5rem;">Dream Team © 2026 | ISO 27001</p>
+        </footer>
+    </div>
+
+    <!-- MODULE WINDOW -->
+    <div id="module-window">
+        <div style="max-width:1200px;margin:0 auto;padding:1rem;">
+            <button onclick="closeModule()" style="background:none;border:none;color:#10b981;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;margin-bottom:1.5rem;">
+                <i class="fas fa-arrow-left" style="margin-right:8px;"></i> Kembali ke Dashboard
+            </button>
+            <div id="module-content"></div>
+        </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:rgba(15,23,42,0.95);backdrop-filter:blur(24px);border-top:1px solid rgba(16,185,129,0.2);padding:8px 12px calc(8px + env(safe-area-inset-bottom));z-index:100;display:none;">
+        <div style="display:flex;justify-content:space-around;align-items:center;max-width:500px;margin:0 auto;">
+            <button class="nav-item active" data-nav="home" onclick="closeModule()" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#94a3b8;cursor:pointer;padding:8px 12px;border-radius:12px;transition:all 0.2s;">
+                <i class="fas fa-home" style="font-size:1.25rem;"></i>
+                <span style="font-size:9px;font-weight:600;">Home</span>
+            </button>
+            <button class="nav-item" data-nav="booking" onclick="openModule('booking')" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#94a3b8;cursor:pointer;padding:8px 12px;border-radius:12px;transition:all 0.2s;">
+                <i class="fas fa-calendar-check" style="font-size:1.25rem;"></i>
+                <span style="font-size:9px;font-weight:600;">Booking</span>
+            </button>
+            <button class="nav-item" data-nav="sekuriti" onclick="openModule('sekuriti')" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#94a3b8;cursor:pointer;padding:8px 12px;border-radius:12px;transition:all 0.2s;">
+                <i class="fas fa-shield-halved" style="font-size:1.25rem;"></i>                <span style="font-size:9px;font-weight:600;">Security</span>
+            </button>
+            <button class="nav-item" data-nav="settings" onclick="openModule('settings')" style="display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;color:#94a3b8;cursor:pointer;padding:8px 12px;border-radius:12px;transition:all 0.2s;">
+                <i class="fas fa-sliders" style="font-size:1.25rem;"></i>
+                <span style="font-size:9px;font-weight:600;">Settings</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ========== KONFIGURASI ==========
+            const CONFIG = {
+                supabase: {
+                    url: 'https://pvznaeppaagylwddirla.supabase.co',
+                    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB2em5hZXBwYWFneWx3ZGRpcmxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NTEwNDMsImV4cCI6MjA4NzUyNzA0M30.t9SJi3VfsBDkKmeZ3egZ4rbvljl4xe0WwNkPtfA9-vo'
+                },
+                lockoutTime: 300,
+                KEYS: {
+                    "012443410": { role: "DEVELOPER", modules: ['booking','k3','sekuriti','settings','profile','ai-panel'] },
+                    "Mr.M_Architect_2025": { role: "MASTER", modules: ['booking','k3','sekuriti','settings','profile','ai-panel'] },
+                    "4dm1n_AF6969@00": { role: "ADMIN", modules: ['booking','k3','sekuriti','settings','profile'] },
+                    "user_@1234": { role: "USER", modules: ['booking'] }
+                },
+                MODULES: [
+                    { id: 'booking', name: 'Booking', icon: 'fa-calendar-check', color: '#3b82f6' },
+                    { id: 'k3', name: 'K3', icon: 'fa-triangle-exclamation', color: '#f59e0b' },
+                    { id: 'sekuriti', name: 'Security', icon: 'fa-shield-halved', color: '#10b981' },
+                    { id: 'settings', name: 'Settings', icon: 'fa-sliders', color: '#64748b' },
+                    { id: 'profile', name: 'Profile', icon: 'fa-user', color: '#ec4899' },
+                    { id: 'ai-panel', name: 'AI Panel', icon: 'fa-brain', color: '#8b5cf6' }
+                ]
+            };
+
+            // ========== STATE ==========
+            let currentUser = null;
+            let currentRole = null;
+            let currentModules = [];
+            let failedAttempts = 0;
+            let isLocked = false;
+
+            // ========== SUPABASE ==========
+            window.supabase = supabase.createClient(CONFIG.supabase.url, CONFIG.supabase.key);
+
+            // ========== TOAST ==========
+            window.toast = function(msg, type = 'success') {
+                const container = document.getElementById('toast-container');                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.innerHTML = '<span>' + (type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️') + '</span><span>' + msg + '</span>';
+                container.appendChild(toast);
+                setTimeout(function() { toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 300); }, 3000);
+            };
+
+            // ========== TOGGLE PASSWORD ==========
+            window.togglePass = function(icon) {
+                const input = document.getElementById('access-key');
+                input.type = input.type === 'password' ? 'text' : 'password';
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            };
+
+            // ========== LOGIN ==========
+            window.checkAccess = async function() {
+                if (isLocked) return;
+                const key = document.getElementById('access-key').value.trim();
+                const userData = CONFIG.KEYS[key];
+
+                if (userData) {
+                    failedAttempts = 0;
+                    currentUser = key;
+                    currentRole = userData.role;
+                    currentModules = userData.modules;
+
+                    sessionStorage.setItem('dream_session', key);
+                    sessionStorage.setItem('dream_role', userData.role);
+                    sessionStorage.setItem('dream_modules', JSON.stringify(userData.modules));
+
+                    window.toast('Selamat datang, ' + userData.role + '!', 'success');
+
+                    document.getElementById('login-zone').style.display = 'none';
+                    document.getElementById('app-shell').classList.remove('hidden');
+                    document.getElementById('bottom-nav').style.display = 'block';
+                    document.getElementById('user-display').textContent = userData.role;
+                    document.getElementById('mode-tag').textContent = userData.role;
+                    document.getElementById('user-badge').textContent = userData.role.charAt(0);
+                    document.getElementById('user-name-display').textContent = userData.role;
+
+                    renderGrid();
+                    loadSlideData();
+                    startClock();
+                    startShalawatSlider();
+                    hideLoading();
+                } else {
+                    failedAttempts++;
+                    const err = document.getElementById('error-msg');
+                    err.textContent = 'Akses ditolak (' + failedAttempts + '/3)';                    err.style.opacity = '1';
+                    window.toast('Access Denied!', 'error');
+
+                    if (failedAttempts >= 3) lockout();
+                    setTimeout(function() { err.style.opacity = '0'; }, 2000);
+                }
+            };
+
+            function lockout() {
+                isLocked = true;
+                const btn = document.getElementById('btnLogin');
+                const timer = document.getElementById('lockout-timer');
+                btn.disabled = true;
+                btn.style.background = '#475569';
+                timer.style.display = 'block';
+
+                let sec = CONFIG.lockoutTime;
+                const interval = setInterval(function() {
+                    const min = Math.floor(sec / 60);
+                    const s = sec % 60;
+                    timer.textContent = 'SYSTEM LOCKED: ' + min + ':' + (s < 10 ? '0' : '') + s;
+                    sec--;
+                    if (sec < 0) {
+                        clearInterval(interval);
+                        isLocked = false;
+                        failedAttempts = 0;
+                        btn.disabled = false;
+                        btn.style.background = '';
+                        timer.style.display = 'none';
+                        window.toast('System unlocked', 'warning');
+                    }
+                }, 1000);
+            }
+
+            // ========== RENDER GRID ==========
+            function renderGrid() {
+                const container = document.getElementById('grid-container');
+                if (!container) return;
+                container.innerHTML = '';
+                CONFIG.MODULES.forEach(function(m) {
+                    if (currentModules.includes(m.id)) {
+                        container.innerHTML += '<div onclick="openModule(\'' + m.id + '\')" class="icon-card glass-card" style="background:rgba(15,23,42,0.7);padding:1.5rem;display:flex;flex-direction:column;align-items:center;border-bottom:4px solid transparent;transition:all 0.2s;">' +
+                            '<div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;box-shadow:0 8px 20px rgba(0,0,0,0.3);background:linear-gradient(135deg,' + m.color + ',#059669);">' +
+                            '<i class="fas ' + m.icon + '" style="color:white;font-size:1.5rem;"></i>' +
+                            '</div>' +
+                            '<span style="font-size:12px;font-weight:700;color:#e2e8f0;text-align:center;text-transform:uppercase;">' + m.name + '</span>' +
+                            '</div>';
+                    }
+                });
+            }
+            // ========== OPEN MODULE ==========
+            window.openModule = async function(id) {
+                const mod = CONFIG.MODULES.find(function(m) { return m.id === id; });
+                if (!mod) return;
+
+                document.getElementById('app-shell').classList.add('hidden');
+                document.getElementById('bottom-nav').style.display = 'none';
+                document.getElementById('module-window').classList.add('active');
+                document.getElementById('module-window').scrollTop = 0;
+
+                const content = document.getElementById('module-content');
+                content.innerHTML = '<div style="text-align:center;padding:4rem;"><div class="spinner" style="margin:0 auto 1rem;"></div><p style="color:#10b981;font-family:\'JetBrains Mono\',monospace;">Loading ' + mod.name + '...</p></div>';
+
+                try {
+                    const res = await fetch('./modules/' + id + '/module.js?t=' + Date.now());
+                    if (!res.ok) throw new Error('Module not found');
+                    const code = await res.text();
+                    
+                    const moduleBlob = new Blob([code], { type: 'application/javascript' });
+                    const moduleUrl = URL.createObjectURL(moduleBlob);
+                    const module = await import(moduleUrl);
+
+                    if (module.render) {
+                        const html = await module.render({
+                            container: content,
+                            user: { role: currentRole, name: currentRole },
+                            supabase: window.supabase
+                        });
+                        content.innerHTML = html;
+
+                        if (module.afterRender) {
+                            await module.afterRender({
+                                container: content,
+                                user: { role: currentRole, name: currentRole },
+                                supabase: window.supabase
+                            });
+                        }
+                    } else {
+                        throw new Error('No render function');
+                    }
+
+                    URL.revokeObjectURL(moduleUrl);
+
+                } catch (err) {
+                    console.error('Module load error:', err);
+                    content.innerHTML = '<div class="glass-card" style="padding:3rem;text-align:center;"><div style="font-size:3rem;margin-bottom:1rem;">⚠️</div><h3 style="color:#e2e8f0;margin-bottom:0.5rem;">Module Load Error</h3><p style="color:#94a3b8;margin-bottom:1.5rem;">' + err.message + '</p><button onclick="closeModule()" style="background:#10b981;color:white;border:none;padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;">Back to Home</button></div>';
+                }
+            };
+            window.closeModule = function() {
+                const content = document.getElementById('module-content');
+                if (content._cleanup) content._cleanup();
+
+                document.getElementById('module-window').classList.remove('active');
+                document.getElementById('app-shell').classList.remove('hidden');
+                document.getElementById('bottom-nav').style.display = 'block';
+                document.getElementById('module-content').innerHTML = '';
+            };
+
+            // ========== SLIDE DATA ==========
+            async function loadSlideData() {
+                try {
+                    const today = new Date().toISOString().split('T')[0];
+
+                    const { data: bookings } = await window.supabase
+                        .from('bookings')
+                        .select('nama_peminjam, ruang, jam_mulai')
+                        .eq('tanggal', today)
+                        .eq('status', 'approved')
+                        .order('jam_mulai', { ascending: true })
+                        .limit(5);
+
+                    const bookingList = document.getElementById('today-booking-list');
+                    if (bookingList) {
+                        bookingList.innerHTML = bookings && bookings.length
+                            ? bookings.map(function(b) { return '<div style="display:flex;justify-content:space-between;font-size:10px;border-bottom:1px solid rgba(51,65,85,0.3);padding:4px 0;"><span>' + b.jam_mulai + ' - ' + b.nama_peminjam + '</span><span style="color:#10b981;">' + b.ruang + '</span></div>'; }).join('')
+                            : '<p style="color:#64748b;font-size:10px;">Tidak ada booking</p>';
+                    }
+
+                    const { data: k3 } = await window.supabase
+                        .from('k3_reports')
+                        .select('lokasi, jenis_laporan')
+                        .eq('tanggal', today)
+                        .limit(5);
+
+                    const k3List = document.getElementById('today-k3-list');
+                    if (k3List) {
+                        k3List.innerHTML = k3 && k3.length
+                            ? k3.map(function(k) { return '<div style="display:flex;justify-content:space-between;font-size:10px;border-bottom:1px solid rgba(51,65,85,0.3);padding:4px 0;"><span>' + k.lokasi + '</span><span style="color:#f59e0b;">' + k.jenis_laporan + '</span></div>'; }).join('')
+                            : '<p style="color:#64748b;font-size:10px;">Tidak ada laporan</p>';
+                    }
+
+                } catch (err) {
+                    console.error('Slide data error:', err);
+                }
+            }
+
+            // ========== CLOCK ==========
+            function startClock() {                setInterval(function() {
+                    const clock = document.getElementById('clock');
+                    if (clock) clock.textContent = new Date().toLocaleTimeString('id-ID');
+                }, 1000);
+            }
+
+            // ========== SHALAWAT SLIDER ==========
+            function startShalawatSlider() {
+                const texts = [
+                    { ar: "بِسْمِ اللَّهِ بِإِذْنِ اللَّهِ", id: "Bismillah bi idznillah" },
+                    { ar: "اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ", id: "The Power Soul of Shalawat" },
+                    { ar: "فَرِيقُ الأَحْلَامِ", id: "Dream Team: Out of The Box" }
+                ];
+                let i = 0;
+                const box = document.getElementById('shalawat-slider');
+                if (!box) return;
+                const update = function() {
+                    box.innerHTML = '<div class="animate-up" style="text-align:center;"><p class="font-arabic" style="font-size:1.5rem;color:#10b981;font-weight:700;margin-bottom:0.25rem;" dir="rtl">' + texts[i].ar + '</p><p style="font-size:8px;color:#94a3b8;text-transform:uppercase;letter-spacing:2px;font-weight:700;font-style:italic;">' + texts[i].id + '</p></div>';
+                    i = (i + 1) % texts.length;
+                };
+                update();
+                setInterval(update, 7000);
+            }
+
+            // ========== 7-SLIDE NAVIGATION ==========
+            let currentSlide = 0;
+            const totalSlides = 7;
+            const dots = document.querySelectorAll('.dot-slide');
+
+            function showSlide(index) {
+                if (index < 0) index = totalSlides - 1;
+                if (index >= totalSlides) index = 0;
+                document.getElementById('info-slider').style.transform = 'translateX(-' + (index * 100) + '%)';
+                dots.forEach(function(dot, i) {
+                    if (i === index) {
+                        dot.classList.add('active');
+                    } else {
+                        dot.classList.remove('active');
+                    }
+                });
+                currentSlide = index;
+            }
+            setInterval(function() { showSlide(currentSlide + 1); }, 7000);
+            dots.forEach(function(dot, i) {
+                dot.addEventListener('click', function() { showSlide(i); });
+            });
+
+            // ========== STATS ==========
+            async function loadStats() {
+                try {                    const [booking, k3, dana] = await Promise.all([
+                        window.supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+                        window.supabase.from('k3_reports').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+                        window.supabase.from('pengajuan_dana').select('*', { count: 'exact', head: true }).eq('status', 'pending')
+                    ]);
+                    document.getElementById('stat-booking').textContent = booking.count || 0;
+                    document.getElementById('stat-k3').textContent = k3.count || 0;
+                    document.getElementById('stat-dana').textContent = dana.count || 0;
+                } catch (e) {}
+            }
+
+            // ========== LOGOUT ==========
+            window.logout = function() {
+                sessionStorage.clear();
+                location.reload();
+            };
+
+            // ========== HIDE LOADING ==========
+            function hideLoading() {
+                setTimeout(function() {
+                    const loading = document.getElementById('loading-screen');
+                    if (loading) loading.classList.add('hide');
+                }, 1500);
+            }
+
+            // ========== SESSION CHECK ==========
+            window.addEventListener('DOMContentLoaded', function() {
+                const session = sessionStorage.getItem('dream_session');
+                const role = sessionStorage.getItem('dream_role');
+                const modulesJson = sessionStorage.getItem('dream_modules');
+
+                if (session && role && modulesJson) {
+                    currentUser = session;
+                    currentRole = role;
+                    currentModules = JSON.parse(modulesJson);
+                    document.getElementById('login-zone').style.display = 'none';
+                    document.getElementById('app-shell').classList.remove('hidden');
+                    document.getElementById('bottom-nav').style.display = 'block';
+                    document.getElementById('user-display').textContent = role;
+                    document.getElementById('mode-tag').textContent = role;
+                    document.getElementById('user-badge').textContent = role.charAt(0);
+                    document.getElementById('user-name-display').textContent = role;
+                    renderGrid();
+                    loadSlideData();
+                    startClock();
+                    startShalawatSlider();
+                    hideLoading();
+                    window.toast('Selamat datang kembali!', 'success');
+                } else {
+                    hideLoading();                }
+
+                // Event listeners
+                document.getElementById('access-key')?.addEventListener('keypress', function(e) { if (e.key === 'Enter') checkAccess(); });
+            });
+
+            // Load stats every 30 sec
+            setInterval(loadStats, 30000);
+            loadStats();
+        })();
+    </script>
 </body>
 </html>
