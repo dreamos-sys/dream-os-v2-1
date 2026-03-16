@@ -1,11 +1,10 @@
 /**
- * DREAM OS v2.1 - SHELL.JS
+ * DREAM OS v2.1 - SHELL.JS (FIXED)
  * Enterprise Login System + Role-Based Access Control
  * 
- * ✅ Login Screen with Password
- * ✅ 9 Main Modules with Role Access
- * ✅ Ghost Mode (Brain Hub LUX)
- * ✅ Smart Background (Prayer Time)
+ * ✅ FIX: Module Icons Clickable
+ * ✅ FIX: Global Function Access
+ * ✅ FIX: Pointer Events Enabled
  * 
  * Bi idznillah 💚
  */
@@ -29,7 +28,6 @@
             theme: 'dream_theme',
             ghostMode: 'dream_ghost'
         },
-        // 🔐 ACCESS KEYS & ROLES
         accessKeys: {
             'Mr.M_Architect_2025': { role: 'MASTER', name: 'Mr.M Architect', modules: 'all' },
             '4dm1n_AF6969@00': { role: 'ADMIN', name: 'Admin AF', modules: 'all' },
@@ -43,16 +41,15 @@
             'user_@1234': { role: 'BOOKING', name: 'Booking User', modules: ['booking'] },
             'user_@2345': { role: 'K3', name: 'K3 Officer', modules: ['k3'] }
         },
-        // 📱 9 MAIN MODULES
         modules: {
-            commandcenter: { id: 'commandcenter', name: 'Command Center', icon: 'fa-desktop', color: '#8b5cf6', roles: ['MASTER', 'ADMIN'] },
-            booking: { id: 'booking', name: 'Booking', icon: 'fa-calendar-check', color: '#3b82f6', roles: ['MASTER', 'ADMIN', 'BOOKING'] },
-            k3: { id: 'k3', name: 'K3', icon: 'fa-triangle-exclamation', color: '#f59e0b', roles: ['MASTER', 'ADMIN', 'K3'] },            sekuriti: { id: 'sekuriti', name: 'Sekuriti', icon: 'fa-shield-halved', color: '#10b981', roles: ['MASTER', 'ADMIN', 'SEKURITI'] },
-            janitor: { id: 'janitor', name: 'Janitor In/Out', icon: 'fa-broom', color: '#ec4899', roles: ['MASTER', 'ADMIN', 'JANITOR'] },
-            stok: { id: 'stok', name: 'Stok Barang', icon: 'fa-boxes-stacked', color: '#f97316', roles: ['MASTER', 'ADMIN', 'JANITOR', 'STOK'] },
-            maintenance: { id: 'maintenance', name: 'Maintenance', icon: 'fa-screwdriver-wrench', color: '#06b6d4', roles: ['MASTER', 'ADMIN', 'MAINTENANCE'] },
-            inventaris: { id: 'inventaris', name: 'Inventaris', icon: 'fa-clipboard-list', color: '#6366f1', roles: ['MASTER', 'ADMIN', 'INVENTARIS', 'ASSET'] },
-            gudang: { id: 'gudang', name: 'Gudang', icon: 'fa-warehouse', color: '#84cc16', roles: ['MASTER', 'ADMIN', 'GUDANG', 'ASSET'] }
+            commandcenter: { id: 'commandcenter', name: 'Command Center', icon: 'fa-desktop', color: '#8b5cf6' },
+            booking: { id: 'booking', name: 'Booking', icon: 'fa-calendar-check', color: '#3b82f6' },
+            k3: { id: 'k3', name: 'K3', icon: 'fa-triangle-exclamation', color: '#f59e0b' },
+            sekuriti: { id: 'sekuriti', name: 'Sekuriti', icon: 'fa-shield-halved', color: '#10b981' },
+            janitor: { id: 'janitor', name: 'Janitor In/Out', icon: 'fa-broom', color: '#ec4899' },
+            stok: { id: 'stok', name: 'Stok Barang', icon: 'fa-boxes-stacked', color: '#f97316' },            maintenance: { id: 'maintenance', name: 'Maintenance', icon: 'fa-screwdriver-wrench', color: '#06b6d4' },
+            inventaris: { id: 'inventaris', name: 'Inventaris', icon: 'fa-clipboard-list', color: '#6366f1' },
+            gudang: { id: 'gudang', name: 'Gudang', icon: 'fa-warehouse', color: '#84cc16' }
         },
         prayerTimes: {
             fajr: { start: 4, end: 6 },
@@ -96,10 +93,10 @@
     function updateSmartBackground() {
         const period = getCurrentTimePeriod();
         document.body.setAttribute('data-time-period', period);
-        currentState.currentPeriod = period;    }
+        currentState.currentPeriod = period;
+    }
 
-    function startBackgroundTimer() {
-        updateSmartBackground();
+    function startBackgroundTimer() {        updateSmartBackground();
         setInterval(updateSmartBackground, 60000);
     }
 
@@ -145,6 +142,10 @@
             </div>
         `;
     }
+
+    // ========================================================================
+    // GLOBAL FUNCTIONS (FIXED - Make clickable)
+    // ========================================================================    
     window.togglePass = function() {
         const input = document.getElementById('access-key');
         const icon = document.getElementById('toggleEye');
@@ -193,9 +194,7 @@
             err.style.opacity = '1';
             window.toast('Access Denied!', 'error');
             
-            if (failedAttempts >= 3) {
-                lockout();            }
-            setTimeout(() => { err.style.opacity = '0'; }, 2000);
+            if (failedAttempts >= 3) lockout();            setTimeout(() => { err.style.opacity = '0'; }, 2000);
         }
     };
 
@@ -207,7 +206,7 @@
         btn.style.background = '#475569';
         timer.style.display = 'block';
         
-        let sec = 300; // 5 minutes
+        let sec = 300;
         const interval = setInterval(() => {
             const min = Math.floor(sec / 60);
             const s = sec % 60;
@@ -226,6 +225,49 @@
     }
 
     // ========================================================================
+    // ✅ MODULE CLICK HANDLER (FIXED)
+    // ========================================================================
+    
+    window.openModule = function(moduleId) {
+        console.log('🔓 Module clicked:', moduleId);
+        const mod = CONFIG.modules[moduleId];
+        if (!mod) {
+            console.error('❌ Module not found:', moduleId);
+            return;
+        }
+        
+        window.toast(`Opening ${mod.name}...`, 'info');
+        
+        // Show module content
+        showModuleContent(mod);
+    };
+
+    function showModuleContent(mod) {
+        const appShell = document.getElementById('app-shell');        if (!appShell) return;
+        
+        appShell.innerHTML = `
+            <div class="module-view" style="padding:1rem;">
+                <button onclick="renderMainApp()" style="background:none;border:none;color:#10b981;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;margin-bottom:1.5rem;">
+                    <i class="fas fa-arrow-left" style="margin-right:8px;"></i> Back to Dashboard
+                </button>
+                
+                <div class="glass-card" style="text-align:center;padding:3rem;">
+                    <div style="width:80px;height:80px;margin:0 auto 1.5rem;border-radius:20px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,${mod.color},#059669);box-shadow:0 8px 20px rgba(0,0,0,0.3);">
+                        <i class="fas ${mod.icon}" style="color:white;font-size:2.5rem;"></i>
+                    </div>
+                    <h2 style="color:#e2e8f0;font-size:1.5rem;margin-bottom:0.5rem;">${mod.name}</h2>
+                    <p style="color:#94a3b8;font-size:12px;margin-bottom:1.5rem;">Module ID: ${mod.id}</p>
+                    
+                    <div style="background:rgba(15,23,42,0.8);padding:1.5rem;border-radius:12px;margin-top:1.5rem;">
+                        <p style="color:#10b981;font-size:11px;text-transform:uppercase;letter-spacing:1px;">🚧 Coming Soon</p>
+                        <p style="color:#64748b;font-size:10px;margin-top:0.5rem;">This module is under development</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // ========================================================================
     // MAIN APP
     // ========================================================================
     
@@ -238,19 +280,19 @@
         const period = currentState.currentPeriod;
         
         appShell.innerHTML = `
-            <div class="islamic-header" data-ghost="true" style="cursor:pointer;">
+            <div class="islamic-header" data-ghost="true" style="cursor:pointer;pointer-events:auto;">
                 <div class="status-bar">
                     <span>v${CONFIG.version}</span>
                     <span>${new Date().toLocaleDateString('id-ID')}</span>
                     <span style="color:#10b981;">${period.toUpperCase()}</span>
-                </div>                <p class="bismillah" dir="rtl" style="font-family:'Amiri',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#10b981;margin-bottom:0.5rem;text-shadow:0 0 20px rgba(16,185,129,0.5);line-height:1.8;">
+                </div>
+                <p class="bismillah" dir="rtl" style="font-family:'Amiri',serif;font-size:clamp(1.5rem,4vw,2.5rem);font-weight:700;color:#10b981;margin-bottom:0.5rem;text-shadow:0 0 20px rgba(16,185,129,0.5);line-height:1.8;">
                     بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
                 </p>
                 <p class="shalawat" dir="rtl" style="font-family:'Amiri',serif;font-size:clamp(1rem,3vw,1.5rem);color:#34d399;opacity:0.9;line-height:1.8;margin-bottom:0.5rem;">
                     اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِ سَيِّدِنَا مُحَمَّدٍ
                 </p>
-                <p style="color:#94a3b8;font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-top:0.5rem;">The Power Soul of Shalawat</p>
-                <p style="color:#64748b;font-size:8px;margin-top:8px;">🤫 Tap header 5x for Ghost Mode</p>
+                <p style="color:#94a3b8;font-size:10px;text-transform:uppercase;letter-spacing:2px;margin-top:0.5rem;">The Power Soul of Shalawat</p>                <p style="color:#64748b;font-size:8px;margin-top:8px;">🤫 Tap header 5x for Ghost Mode</p>
             </div>
             
             <div class="glass-card" style="margin:1rem;">
@@ -286,20 +328,20 @@
             </div>
             
             <div class="glass-card" style="margin:1rem;">
-                <p style="color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">📱 Main Modules</p>
-                <div class="bento-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+                <p style="color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">📱 Main Modules (${currentState.allowedModules.length})</p>
+                <div class="module-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
                     ${renderModuleGrid()}
                 </div>
             </div>
             
-            <div style="text-align:center;padding:2rem;">                <p style="color:#64748b;font-size:9px;text-transform:uppercase;letter-spacing:1px;">The Power Soul of Shalawat</p>
+            <div style="text-align:center;padding:2rem;">
+                <p style="color:#64748b;font-size:9px;text-transform:uppercase;letter-spacing:1px;">The Power Soul of Shalawat</p>
                 <p style="color:#475569;font-size:8px;margin-top:0.5rem;">Dream Team © 2026 | ISO 27001</p>
                 <button onclick="doLogout()" style="margin-top:1rem;background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.3);padding:12px 32px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;cursor:pointer;">
                     🚪 Logout System
                 </button>
             </div>
-        `;
-        
+        `;        
         startClock();
         setTimeout(() => { setupGhostTap(); }, 500);
     }
@@ -311,12 +353,13 @@
         Object.values(CONFIG.modules).forEach(mod => {
             if (allowedModules.includes(mod.id) || allowedModules === 'all') {
                 html += `
-                    <div onclick="openModule('${mod.id}')" class="module-card" 
-                         style="background:rgba(15,23,42,0.7);padding:1.5rem;display:flex;flex-direction:column;align-items:center;border-radius:16px;cursor:pointer;transition:all 0.2s;border:1px solid rgba(16,185,129,0.1);">
+                    <div class="module-card" 
+                         onclick="openModule('${mod.id}')"
+                         style="background:rgba(15,23,42,0.7);padding:1.5rem;display:flex;flex-direction:column;align-items:center;border-radius:16px;cursor:pointer;transition:all 0.2s;border:1px solid rgba(16,185,129,0.1);pointer-events:auto;">
                         <div style="width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:0.75rem;box-shadow:0 8px 20px rgba(0,0,0,0.3);background:linear-gradient(135deg,${mod.color},#059669);">
-                            <i class="fas ${mod.icon}" style="color:white;font-size:1.5rem;"></i>
+                            <i class="fas ${mod.icon}" style="color:white;font-size:1.5rem;pointer-events:none;"></i>
                         </div>
-                        <span style="color:#e2e8f0;font-size:11px;font-weight:700;text-align:center;text-transform:uppercase;">${mod.name}</span>
+                        <span style="color:#e2e8f0;font-size:11px;font-weight:700;text-align:center;text-transform:uppercase;pointer-events:none;">${mod.name}</span>
                     </div>
                 `;
             }
@@ -325,23 +368,16 @@
         return html;
     }
 
-    window.openModule = function(moduleId) {
-        const mod = CONFIG.modules[moduleId];
-        if (!mod) return;
-        
-        window.toast(`Opening ${mod.name}...`, 'info');
-        // Module content would be loaded here
-    };
-
     // ========================================================================
-    // 🧠 BRAIN HUB LUX (Same as before - Ghost Mode)
+    // 🧠 BRAIN HUB LUX (Same as before)
     // ========================================================================
     
     class BrainHub {
         constructor() {
             this.isVisible = false;
             this.activeTab = 'overview';
-            this.consoleBuffer = [];            this.interceptConsole();
+            this.consoleBuffer = [];
+            this.interceptConsole();
         }
 
         interceptConsole() {
@@ -354,8 +390,7 @@
                 });
                 if (this.consoleBuffer.length > 100) this.consoleBuffer.shift();
             };
-            console.log = (...a) => { add('INFO', a); origLog(...a); };
-            console.warn = (...a) => { add('WARN', a); origWarn(...a); };
+            console.log = (...a) => { add('INFO', a); origLog(...a); };            console.warn = (...a) => { add('WARN', a); origWarn(...a); };
             console.error = (...a) => { add('ERROR', a); origError(...a); };
         }
 
@@ -390,7 +425,8 @@
                 .hub-tab.active { background:rgba(16,185,129,0.2); border-color:#10b981; color:#10b981; font-weight:700; }
                 .hub-content { flex:1; overflow-y:auto; padding:16px; background:#020617; }
                 .hub-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px; }
-                .hub-card { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:12px; }                .hub-card-title { font-size:12px; font-weight:700; color:#fff; margin-bottom:8px; text-transform:uppercase; border-left:3px solid #10b981; padding-left:8px; }
+                .hub-card { background:#0f172a; border:1px solid #334155; border-radius:8px; padding:12px; }
+                .hub-card-title { font-size:12px; font-weight:700; color:#fff; margin-bottom:8px; text-transform:uppercase; border-left:3px solid #10b981; padding-left:8px; }
                 .hub-stat { display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid #1e293b; }
                 .hub-stat-label { color:#94a3b8; }
                 .hub-stat-value { color:#10b981; font-weight:600; }
@@ -403,8 +439,7 @@
             </style>
             <div class="hub-header">
                 <div><span class="hub-title">🧠 BRAIN HUB [GHOST ARCHITECT]</span><div style="font-size:9px;opacity:0.7;">Sovereign Enterprise v${CONFIG.version} LUX</div></div>
-                <div class="hub-close" onclick="window.BrainHubInstance.close()">✕ CLOSE</div>
-            </div>
+                <div class="hub-close" onclick="window.BrainHubInstance.close()">✕ CLOSE</div>            </div>
             <div class="hub-tabs">
                 <div class="hub-tab active" data-tab="overview">📊 OVERVIEW</div>
                 <div class="hub-tab" data-tab="console">💻 CONSOLE</div>
@@ -439,7 +474,8 @@
                     <div class="hub-stat"><span class="hub-stat-label">Version</span><span class="hub-stat-value">${CONFIG.version}</span></div>
                     <div class="hub-stat"><span class="hub-stat-label">Build</span><span class="hub-stat-value">2026.03.16</span></div>
                     <div class="hub-stat"><span class="hub-stat-label">Modules</span><span class="hub-stat-value">${currentState.allowedModules.length} Access</span></div>
-                </div>            </div>
+                </div>
+            </div>
             <div style="margin-top:20px; text-align:center;">
                 <button class="hub-btn" onclick="window.BrainHubInstance.switchTab('console')">💻 OPEN KERNEL CONSOLE</button>
                 <button class="hub-btn" onclick="window.BrainHubInstance.clearConsole()">🗑️ CLEAR LOGS</button>
@@ -452,8 +488,7 @@
         renderConsole() {
             const logs = this.consoleBuffer.slice().reverse();
             return `
-            <div style="margin-bottom:8px;">
-                <button class="hub-btn" onclick="window.BrainHubInstance.clearConsole()">🗑️ CLEAR</button>
+            <div style="margin-bottom:8px;">                <button class="hub-btn" onclick="window.BrainHubInstance.clearConsole()">🗑️ CLEAR</button>
                 <button class="hub-btn" onclick="window.BrainHubInstance.switchTab('overview')">📊 BACK TO OVERVIEW</button>
             </div>
             <div class="hub-console">${logs.map(l => `<div class="console-${l.level}">[${l.timestamp}] ${l.level}: ${l.message}</div>`).join('') || '<div style="color:#64748b;text-align:center;padding:2rem;">Waiting for logs...</div>'}</div>
@@ -488,7 +523,8 @@
             else if (tab === 'console') content.innerHTML = this.renderConsole();
             else if (tab === 'audit') content.innerHTML = this.renderAudit();
             else if (tab === 'hotpatch') content.innerHTML = this.renderHotpatch();
-            else if (tab === 'database') content.innerHTML = this.renderDatabase();        }
+            else if (tab === 'database') content.innerHTML = this.renderDatabase();
+        }
 
         close() {
             const overlay = document.getElementById('brain-hub');
@@ -502,7 +538,6 @@
             document.body.style.filter = 'none';
             document.body.style.opacity = '1';
         }
-
         clearConsole() { this.consoleBuffer = []; this.switchTab('console'); }
     }
 
@@ -537,7 +572,8 @@
             if (header) {
                 header.style.cursor = 'pointer';
                 header.setAttribute('data-ghost', 'true');
-                header.addEventListener('click', handleGhostTap);                return;
+                header.addEventListener('click', handleGhostTap);
+                return;
             }
             if (retries > 0) setTimeout(() => trySetup(retries - 1), 500);
         }
@@ -550,8 +586,7 @@
         
         if (tapLength < 500 && tapLength > 0) {
             currentState.ghostMode.tapCount++;
-            if (currentState.ghostMode.tapCount >= 5) {
-                showGhostInput();
+            if (currentState.ghostMode.tapCount >= 5) {                showGhostInput();
                 currentState.ghostMode.tapCount = 0;
             }
         } else {
@@ -586,7 +621,8 @@
                     }).join('')}
                 </div>
                 <button onclick="closeGhostInput()" style="margin-top:1.5rem;background:none;border:none;color:#94a3b8;cursor:pointer;font-size:10px;">Cancel</button>
-            </div>        `;
+            </div>
+        `;
         
         document.body.appendChild(overlay);
         setTimeout(() => { overlay.style.opacity = '1'; }, 10);
@@ -599,8 +635,7 @@
         if (key === 'C') currentState.ghostMode.inputBuffer = '';
         else if (key === '✓') verifyGhostPassword();
         else if (currentState.ghostMode.inputBuffer.length < 2) currentState.ghostMode.inputBuffer += key;
-        updateGhostDots();
-    }
+        updateGhostDots();    }
 
     function updateGhostDots() {
         document.querySelectorAll('#ghost-dots div').forEach((dot, i) => {
@@ -635,7 +670,8 @@
     // UTILITY
     // ========================================================================
     
-    window.toast = function(message, type = 'success') {        const container = document.getElementById('toast-container');
+    window.toast = function(message, type = 'success') {
+        const container = document.getElementById('toast-container');
         if (!container) return;
         const toast = document.createElement('div');
         toast.style.cssText = 'background:rgba(15,23,42,0.95);backdrop-filter:blur(24px);border:1px solid rgba(16,185,129,0.2);border-radius:16px;padding:12px 24px;color:#e2e8f0;font-size:12px;margin-bottom:10px;border-left:4px solid #10b981;';
@@ -648,7 +684,6 @@
         const loading = document.getElementById('loading-screen');
         if (loading) setTimeout(() => { loading.classList.add('hide'); }, 1500);
     }
-
     function startClock() {
         const clock = document.getElementById('live-clock');
         if (clock) setInterval(() => { clock.textContent = new Date().toLocaleTimeString('id-ID'); }, 1000);
@@ -684,7 +719,8 @@
                     : userData.modules;
                 
                 renderMainApp();
-                initGhostMode();                window.toast(`Welcome back, ${userData.role}!`, 'success');
+                initGhostMode();
+                window.toast(`Welcome back, ${userData.role}!`, 'success');
             } else {
                 renderLoginScreen();
             }
@@ -693,10 +729,11 @@
             hideLoading();
             
             console.log('✅ Dream OS initialized successfully!');
+            console.log('🌍 Smart Background Active');
+            console.log('🧠 Brain Hub: Ready for Ghost Mode');
         } catch (error) {
             console.error('❌ Init error:', error);
-            renderLoginScreen();
-        }
+            renderLoginScreen();        }
     }
 
     if (document.readyState === 'loading') {
