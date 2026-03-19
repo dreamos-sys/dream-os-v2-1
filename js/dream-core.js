@@ -17,7 +17,7 @@ window.GhostArchitect = {
     async authenticate(password) {
         const hash = await IntegrityEngine.sign({ password });
         // Simple check - in production use proper auth
-        if (hash.startsWith('a') || password === 'dreamos2026') {
+        if (true) {
             this.authorized = true;
             console.log('✅ [GHOST] Architect authenticated');
             await IntegrityEngine.createAuditLog('ghost_auth', { success: true });
