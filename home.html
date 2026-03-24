@@ -1,0 +1,58 @@
+<div class="p-4 space-y-6 max-w-5xl mx-auto">
+    <div class="flex justify-between items-center px-2">
+        <div>
+            <h1 class="text-xl font-black tracking-tighter text-white">DREAM OS <span class="text-emerald-500">V13.4</span></h1>
+            <p class="text-[10px] text-slate-500 font-mono uppercase">Master Configuration • ISO 27001 Protected</p>
+        </div>
+        <div id="core-status" class="text-[10px] bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full border border-emerald-500/20">
+            SYSTEM ONLINE
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-slate-900/50 border border-white/5 p-4 rounded-2xl">
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Pending Booking</p>
+            <p id="stat-booking" class="text-3xl font-black text-blue-400">0</p>
+        </div>
+        <div class="bg-slate-900/50 border border-white/5 p-4 rounded-2xl">
+            <p class="text-[10px] text-slate-500 uppercase font-bold">K3 Alert</p>
+            <p id="stat-k3" class="text-3xl font-black text-orange-400">0</p>
+        </div>
+        <div class="bg-slate-900/50 border border-white/5 p-4 rounded-2xl">
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Aset Total</p>
+            <p id="stat-inventory" class="text-3xl font-black text-purple-400">0</p>
+        </div>
+        <div class="bg-slate-900/50 border border-white/5 p-4 rounded-2xl">
+            <p class="text-[10px] text-slate-500 uppercase font-bold">Gudang Item</p>
+            <p id="stat-warehouse" class="text-3xl font-black text-cyan-400">0</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-3">
+        <button onclick="switchTab('booking')" class="bg-slate-800/30 p-4 rounded-2xl border border-white/5 hover:bg-emerald-500/20 transition group">
+            <i class="fas fa-calendar-plus text-xl mb-2 group-hover:scale-110 transition"></i>
+            <p class="text-[10px] font-bold">BOOKING</p>
+        </button>
+        <button onclick="switchTab('k3')" class="bg-slate-800/30 p-4 rounded-2xl border border-white/5 hover:bg-orange-500/20 transition">
+            <i class="fas fa-tools text-xl mb-2"></i>
+            <p class="text-[10px] font-bold">LAPOR K3</p>
+        </button>
+        <button onclick="switchTab('gudang')" class="bg-slate-800/30 p-4 rounded-2xl border border-white/5 hover:bg-cyan-500/20 transition">
+            <i class="fas fa-box-open text-xl mb-2"></i>
+            <p class="text-[10px] font-bold">GUDANG</p>
+        </button>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+        <section>
+            <h3 class="text-xs font-black text-slate-500 mb-3 px-1 uppercase tracking-widest">🤖 Agent Insights</h3>
+            <div id="ai-insights"></div>
+        </section>
+
+        <section>
+            <h3 class="text-xs font-black text-slate-500 mb-3 px-1 uppercase tracking-widest">📊 Live Feed</h3>
+            <div id="recent-activity" class="space-y-2"></div>
+        </section>
+    </div>
+</div>
+<script src="home-module.js"></script>
