@@ -1,145 +1,19 @@
 <!DOCTYPE html>
-<html lang="id" class="dark">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dream OS v13.4 - Sovereign System</title>
+    <title>Dream OS v13.4 - Master M</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body { background-color: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
-        .grid-icon { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        .grid-icon:active { scale: 0.9; }
-        .safe-area-bottom { padding-bottom: env(safe-area-inset-bottom); }
-        /* Custom Scrollbar for Mobile */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen flex flex-col">
-
-    <header class="p-5 flex justify-between items-center glass sticky top-0 z-50">
-        <div>
-            <h1 class="text-lg font-black tracking-tighter text-cyan-400">DREAM OS <span class="text-[10px] font-mono opacity-50">v13.4</span></h1>
-            <p class="text-[8px] font-mono opacity-60 uppercase tracking-widest">ISO 27001 | 9001 | 55001 COMPLIANT</p>
+<body class="bg-[#020617] text-white overflow-x-hidden">
+    <div id="app-shell">
+        <div class="flex flex-col items-center justify-center h-screen space-y-4">
+            <div class="w-12 h-12 border-4 border-lime-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="text-lime-500 font-bold tracking-[3px] animate-pulse uppercase text-[10px]">Initializing Dream OS...</p>
         </div>
-        <div class="flex items-center gap-3">
-            <div id="connection-status" class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></div>
-            <i class="fas fa-fingerprint text-cyan-500 text-xl" onclick="alert('Fingerprint Active (Redmi Note 9 Pro)')"></i>
-        </div>
-    </header>
-
-    <main id="main-dashboard" class="flex-1 p-6 animate-in fade-in duration-500">
-        <div class="mb-6">
-            <h2 class="text-sm font-mono opacity-50 mb-1">Bismillah bi idznillah,</h2>
-            <h3 class="text-xl font-bold">Halo, My Bro Architect 🧐</h3>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4 mb-8">
-            <div onclick="showModule('booking')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-cyan-500/20 flex items-center justify-center rounded-xl text-cyan-400 text-xl"><i class="fas fa-calendar-check"></i></div>
-                <span class="text-[10px] font-bold uppercase">Booking</span>
-            </div>
-            <div onclick="showModule('k3')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-orange-500/20 flex items-center justify-center rounded-xl text-orange-400 text-xl"><i class="fas fa-shield-virus"></i></div>
-                <span class="text-[10px] font-bold uppercase">K3 Smart</span>
-            </div>
-            <div onclick="showModule('maintenance')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-yellow-500/20 flex items-center justify-center rounded-xl text-yellow-400 text-xl"><i class="fas fa-tools"></i></div>
-                <span class="text-[10px] font-bold uppercase">Teknisi</span>
-            </div>
-            <div onclick="showModule('stok')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-purple-500/20 flex items-center justify-center rounded-xl text-purple-400 text-xl"><i class="fas fa-boxes-stacked"></i></div>
-                <span class="text-[10px] font-bold uppercase">Gudang</span>
-            </div>
-            <div onclick="showModule('janitor-indoor')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-emerald-500/20 flex items-center justify-center rounded-xl text-emerald-400 text-xl"><i class="fas fa-broom"></i></div>
-                <span class="text-[10px] font-bold uppercase">Indoor</span>
-            </div>
-            <div onclick="showModule('janitor-outdoor')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-teal-500/20 flex items-center justify-center rounded-xl text-teal-400 text-xl"><i class="fas fa-tree"></i></div>
-                <span class="text-[10px] font-bold uppercase">Outdoor</span>
-            </div>
-            <div onclick="showModule('dana')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-blue-500/20 flex items-center justify-center rounded-xl text-blue-400 text-xl"><i class="fas fa-wallet"></i></div>
-                <span class="text-[10px] font-bold uppercase">Dana</span>
-            </div>
-            <div onclick="showModule('analytics')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl border border-purple-500/30">
-                <div class="h-12 w-12 bg-purple-600/20 flex items-center justify-center rounded-xl text-purple-400 text-xl"><i class="fas fa-brain"></i></div>
-                <span class="text-[10px] font-bold uppercase">Predictive</span>
-            </div>
-            <div onclick="showModule('admin')" class="grid-icon flex flex-col items-center gap-2 p-4 glass rounded-2xl">
-                <div class="h-12 w-12 bg-slate-500/20 flex items-center justify-center rounded-xl text-slate-400 text-xl"><i class="fas fa-user-gear"></i></div>
-                <span class="text-[10px] font-bold uppercase">Admin</span>
-            </div>
-        </div>
-
-        <div class="glass p-5 rounded-3xl mt-4">
-            <div class="flex justify-between items-center mb-4">
-                <h4 class="text-xs font-black uppercase tracking-tighter text-purple-400"><i class="fas fa-bolt mr-2"></i>Dream AI Insights</h4>
-                <span class="text-[8px] opacity-40">REAL-TIME ANALYTICS</span>
-            </div>
-            <div id="ai-insights" class="space-y-3">
-                <p class="text-[11px] opacity-50 italic animate-pulse">Memuat analisa kecerdasan buatan...</p>
-            </div>
-        </div>
-    </main>
-
-    <section id="module-container">
-        <div id="panel-k3" class="module-panel hidden fixed inset-0 z-[60] bg-[#0f172a] overflow-y-auto p-5">
-            <nav class="flex items-center gap-4 mb-6">
-                <button onclick="backToHome()" class="h-10 w-10 flex items-center justify-center glass rounded-xl"><i class="fas fa-chevron-left"></i></button>
-                <h2 class="font-black uppercase italic text-orange-500">🛡️ K3 Smart Laporan</h2>
-            </nav>
-            <form id="k3Form" class="space-y-4">
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="date" id="tanggal" class="bg-slate-800 p-3 rounded-xl text-xs border-none focus:ring-2 ring-orange-500">
-                    <input type="text" id="pelapor" placeholder="Nama Pelapor" class="bg-slate-800 p-3 rounded-xl text-xs border-none">
-                </div>
-                <input type="text" id="lokasi" placeholder="Lokasi Kejadian (Cth: Aula)" class="w-full bg-slate-800 p-3 rounded-xl text-xs border-none">
-                <select id="jenis_laporan" class="w-full bg-slate-800 p-3 rounded-xl text-xs border-none">
-                    <option value="kerusakan">🔧 Kerusakan</option>
-                    <option value="kehilangan">🔒 Kehilangan</option>
-                    <option value="kebersihan">🧹 Kebersihan</option>
-                </select>
-                <div id="dynamic-fields" class="space-y-2"></div>
-                <textarea id="deskripsi" placeholder="Deskripsi Laporan..." class="w-full bg-slate-800 p-3 rounded-xl text-xs border-none h-24"></textarea>
-                <button type="submit" class="w-full bg-orange-600 p-4 rounded-xl font-black uppercase text-sm shadow-lg shadow-orange-600/20">Kirim Laporan</button>
-                <div id="form-result" class="text-center mt-2"></div>
-            </form>
-            <hr class="my-8 opacity-10">
-            <h3 class="text-xs font-bold mb-4">RIWAYAT HARI INI</h3>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left">
-                    <tbody id="history-table-body"></tbody>
-                </table>
-            </div>
-        </div>
-
-        <div id="panel-stok" class="module-panel hidden fixed inset-0 z-[60] bg-[#0f172a] overflow-y-auto p-5">
-            <nav class="flex items-center gap-4 mb-6">
-                <button onclick="backToHome()" class="h-10 w-10 flex items-center justify-center glass rounded-xl"><i class="fas fa-chevron-left"></i></button>
-                <h2 class="font-black uppercase italic text-purple-500">📦 Inventaris Gudang</h2>
-            </nav>
-            <div id="stok-list" class="space-y-3"></div>
-        </div>
-        
-        </section>
-
-    <footer class="p-6 text-center glass-t safe-area-bottom">
-        <p class="text-[9px] font-mono opacity-40 uppercase tracking-widest">The Power Soul of Shalawat</p>
-        <p class="text-[10px] font-bold text-cyan-500">DREAM TEAM • SIBLING SYSTEM</p>
-    </footer>
-
-    <script src="config.js"></script> <script src="app.js"></script>
-    <script src="k3-module.js"></script>
-    <script src="stok.js"></script>
-    <script src="prediction.js"></script>
-    <script src="maintenance.js"></script>
-    <script src="janitor-indoor.js"></script>
-    <script src="janitor-outdoor.js"></script>
-
+    </div>
+    <script type="module" src="./js/shell.js?v=${Date.now()}"></script>
 </body>
 </html>
