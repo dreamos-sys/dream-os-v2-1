@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dream OS v2.1 | AI Arena</title>
+    <title>Dream OS v2.1 | Original</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background: #010409; color: #e6edf3; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; }
-        .grid-icon { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s; }
-        .grid-icon:active { transform: scale(0.9); background: rgba(34, 197, 94, 0.1); border-color: #22c55e; }
+        body { background: #010409; color: #e6edf3; font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+        .glass-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px); }
+        .grid-icon { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .grid-icon:active { transform: scale(0.85); background: rgba(34, 197, 94, 0.15); border-color: #22c55e; }
+        @keyframes pulse-border { 0% { border-color: rgba(34, 197, 94, 0.2); } 50% { border-color: rgba(34, 197, 94, 0.5); } 100% { border-color: rgba(34, 197, 94, 0.2); } }
+        .active-ring { animation: pulse-border 2s infinite; }
     </style>
 </head>
-<body class="flex items-center justify-center h-screen">
-    <div id="app" class="w-full max-w-md p-6 h-full flex flex-col justify-center"></div>
+<body class="flex items-center justify-center">
+    <div id="app" class="w-full max-w-md p-8 h-full flex flex-col justify-center"></div>
     <script type="module" src="shell.js"></script>
 </body>
 </html>
