@@ -1,33 +1,84 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dream OS v13.4</title>
-    <link rel="icon" href="assets/img/icon-192.png">
-    <style>
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; }
-        .dashboard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 20px; }
-        .tile { border: 1px solid #0078D4; padding: 15px; text-align: center; border-radius: 8px; background: rgba(0,120,212,0.1); }
-        .tile img { display: block; margin: 0 auto 10px; }
-        .tile-label { font-size: 0.8rem; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Dream OS v2.1</title>
+  <meta name="theme-color" content="#10b981">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="assets/img/icon-192.png">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; padding: 0; background: #0b1120; font-family: sans-serif; color: white; min-height: 100vh; }
+    #app-shell { padding-bottom: 90px; transition: 0.3s; }
+    
+    /* Splash Screen */
+    .loading-splash { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #020617; color: #10b981; }
+    .bismillah { font-family: 'Amiri', serif; font-size: 2rem; margin-top: 1rem; }
+
+    /* Bottom Nav Bar */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex; justify-content: space-around; align-items: center;
+      padding-bottom: env(safe-area-inset-bottom); z-index: 1000;
+    }
+    .nav-item {
+      background: none; border: none; color: rgba(255, 255, 255, 0.5);
+      display: flex; flex-direction: column; align-items: center; flex: 1; cursor: pointer;
+    }
+    .nav-item.active { color: #10b981; }
+    .nav-icon { font-size: 1.3rem; margin-bottom: 4px; }
+    .nav-label { font-size: 0.6rem; font-weight: bold; text-transform: uppercase; }
+
+    /* Floating QR Button */
+    .qr-container { position: relative; top: -25px; width: 70px; display: flex; justify-content: center; }
+    .qr-btn {
+      width: 60px; height: 60px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 50%; border: 5px solid #0b1120;
+      box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+      display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;
+    }
+  </style>
 </head>
 <body>
-    <div class="dashboard">
-        <div class="tile" onclick="loadModule('stok')">
-            <img src="assets/img/icon-192.png" width="45" alt="Gudang">
-            <span class="tile-label">Gudang</span>
-        </div>
-        <div class="tile" onclick="loadModule('booking')">
-            <img src="assets/img/icon-192.png" width="45" alt="Booking">
-            <span class="tile-label">Booking</span>
-        </div>
-        <div class="tile" onclick="loadModule('security')">
-            <img src="assets/img/icon-192.png" width="45" alt="Security">
-            <span class="tile-label">Security</span>
-        </div>
+  <div id="app-shell">
+    <div class="loading-splash" id="loading">
+      <div style="text-align:center">
+        <div class="bismillah">بِسْمِ اللّٰهِ</div>
+        <div style="font-weight:bold; color: #10b981;">Dream OS v2.1</div>
+      </div>
     </div>
-    <script src="js/app-core.js"></script>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="loadPage('home')">
+      <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" onclick="loadPage('profile')">
+      <span class="nav-icon">👤</span><span class="nav-label">User</span>
+    </button>
+    <div class="qr-container">
+      <button class="qr-btn" onclick="loadPage('qr')">🔳</button>
+    </div>
+    <button class="nav-item" onclick="loadPage('about')">
+      <span class="nav-icon">ℹ️</span><span class="nav-label">About</span>
+    </button>
+    <button class="nav-item" onclick="loadPage('settings')">
+      <span class="nav-icon">⚙️</span><span class="nav-label">Settings</span>
+    </button>
+  </nav>
+
+  <script type="module" src="./shell.js"></script>
+  <script>
+    function loadPage(page) {
+      console.log("Navigating to: " + page);
+      document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+      // Logic pemanggil shell.js Master di sini
+    }
+  </script>
 </body>
 </html>
