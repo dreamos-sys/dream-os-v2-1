@@ -3,21 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dream OS v2.1</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Dream OS v2.1 - Sovereign AI</title>
+    <meta name="theme-color" content="#000000">
     <style>
-        body { background: #000; color: #fff; margin:0; height: 100vh; overflow: hidden; font-family: sans-serif; }
-        .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(10px); }
+        body { margin: 0; background: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; overflow-x: hidden; }
+        #app-shell { min-height: 100vh; }
+        /* Smooth Fade for Slider */
+        #smart-slide-content { transition: opacity 0.5s ease-in-out; }
     </style>
 </head>
 <body>
-    <div id="app-shell" class="h-screen w-full flex items-center justify-center">
-        <div id="loader" class="text-center animate-pulse">
-            <i class="fas fa-microchip text-4xl text-green-500 mb-4"></i>
-            <p class="text-[8px] tracking-[5px] uppercase opacity-30">Initializing Core...</p>
-        </div>
-    </div>
+    <div id="app-shell"></div>
+    <!-- Load Shell as Module -->
     <script type="module" src="./shell.js"></script>
 </body>
 </html>
