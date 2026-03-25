@@ -1,15 +1,18 @@
-/**
- * Auto-Generated Module: qr
- * Created by Dream OS Sovereign Scanner
- */
 export default {
-    render: async (ctx) => {
+    name: 'QR Scanner',
+    icon: 'fa-qrcode',
+    color: '#06b6d4',
+    description: 'Scan QR code for attendance & asset tracking',
+    async render(context) {
         return `
-            <div class="animate-fade" style="padding: 20px;">
-                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 20px; padding: 30px; text-align: center;">
-                    <h2 style="color: #10b981;">Modul ${ctx.id}</h2>
-                    <p style="color: #64748b;">Sistem sedang dikembangkan oleh Ghost Architect.</p>
-                    <button onclick="location.reload()" style="background: #10b981; color: #000; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 20px; font-weight: bold;">KEMBALI KE HOME</button>
+            <div style="padding:20px; text-align:center;">
+                <h3 style="color:#06b6d4; margin-bottom:15px;">📱 QR Scanner</h3>
+                <div style="background:rgba(15,23,42,0.5); border-radius:20px; padding:25px;">
+                    <i class="fas fa-qrcode" style="font-size:64px; color:#06b6d4; margin-bottom:15px;"></i>
+                    <p>Scan QR code untuk absensi & asset tracking</p>
+                    <button class="btn" style="margin-top:20px; background:#06b6d4;" onclick="window.DREAM.toast('Fitur scan QR segera hadir', 'info')">
+                        <i class="fas fa-camera"></i> Scan QR
+                    </button>
                 </div>
             </div>
         `;
