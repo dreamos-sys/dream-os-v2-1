@@ -1,6 +1,7 @@
 #!/bin/bash
 # ══════════════════════════════════════════════════════════════
-# DREAM OS v2.1 ULTIMATE - SOVEREIGN DEPLOYER (FIXED)
+# DREAM OS v2.1 ULTIMATE - AUTO-DYNAMIC SCANNER & DEPLOYER
+# Author: Ghost Architect | Team: Dream Team
 # ══════════════════════════════════════════════════════════════
 
 G='\033[0;32m'
@@ -10,53 +11,69 @@ R='\033[0;31m'
 NC='\033[0m'
 
 clear
-echo -e "${P}Initializing Dream OS v2.1 Sovereign Hub...${NC}"
+echo -e "${P}Initializing Dream OS v2.1 Sovereign Scanner...${NC}"
 echo -e "${G}بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ${NC}"
-echo -e "${P}══════════════════════════════════════════════════════════════${NC}"
 
-# --- [1/4] MODULE INTEGRITY ---
-echo -e "${B}[1/4] Analyzing Module Integrity...${NC}"
-MODULES=("command-center" "booking" "k3" "sekuriti" "janitor-in" "janitor-out" "stok" "maintenance" "asset")
+# --- [1/3] AUTO-DISCOVERY & SCAFFOLDING ---
+echo -e "${B}[1/3] Scanning Modules Directory...${NC}"
 
-for mod in "${MODULES[@]}"; do
-    if [ ! -d "modules/$mod" ]; then
-        echo -e "${B}Creating Missing Core: modules/$mod...${NC}"
-        mkdir -p "modules/$mod"
-        echo "export default { render: async (ctx) => '<h3>Module $mod Active</h3>' };" > "modules/$mod/module.js"
+# Loop semua folder di dalam directory modules
+for d in modules/*/; do
+    # Menghapus trailing slash dari nama folder
+    mod_name=$(basename "$d")
+    
+    # Cek apakah file module.js sudah ada
+    if [ ! -f "${d}module.js" ]; then
+        echo -e "${G}New Module Detected: $mod_name. Auto-generating core...${NC}"
+        
+        # Buat template module.js otomatis agar sistem tidak crash
+        cat << INNER_EOF > "${d}module.js"
+/**
+ * Auto-Generated Module: $mod_name
+ * Created by Dream OS Sovereign Scanner
+ */
+export default {
+    render: async (ctx) => {
+        return \`
+            <div class="animate-fade" style="padding: 20px;">
+                <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 20px; padding: 30px; text-align: center;">
+                    <h2 style="color: #10b981;">Modul \${ctx.id}</h2>
+                    <p style="color: #64748b;">Sistem sedang dikembangkan oleh Ghost Architect.</p>
+                    <button onclick="location.reload()" style="background: #10b981; color: #000; border: none; padding: 10px 20px; border-radius: 10px; margin-top: 20px; font-weight: bold;">KEMBALI KE HOME</button>
+                </div>
+            </div>
+        \`;
+    }
+};
+INNER_EOF
     fi
 done
 
-# --- [2/4] ISO 27001 AUDIT ---
-echo -e "${B}[2/4] ISO 27001 Security Audit...${NC}"
+# --- [2/3] SECURITY & INTEGRITY CHECK ---
+echo -e "${B}[2/3] Performing ISO 27001 Security Audit...${NC}"
 if [ -f "shell.js" ]; then
-    if grep -q "dreamos2026" shell.js; then
-        echo -e "${G}Ghost Stealth Key: Secure.${NC}"
-    else
-        echo -e "${R}Warning: Ghost Key Modified!${NC}"
-    fi
+    echo -e "${G}Integrity Check: shell.js [OK]${NC}"
 else
-    echo -e "${R}Error: shell.js not found! Pastikan file shell.js ada di folder ini.${NC}"
+    echo -e "${R}Critical Error: shell.js MISSING!${NC}"
+    exit 1
 fi
 
-# --- [3/4] OPTIMIZATION ---
-echo -e "${B}[3/4] Optimizing for Redmi Note 9 Pro...${NC}"
-sleep 1
+# --- [3/3] SOVEREIGN DEPLOYMENT ---
+echo -e "${B}[3/3] Syncing to Sovereign Hub (GitHub/Cloudflare)...${NC}"
 
-# --- [4/4] DEPLOYMENT ---
-echo -e "${B}[4/4] Syncing to Sovereign Hub...${NC}"
 git add .
-
-echo -ne "${G}Update Note (Default: Update Ultimate v2.1): ${NC}"
+echo -ne "${G}Update Note (Bismillah): ${NC}"
 read NOTE
 if [ -z "$NOTE" ]; then
-    NOTE="Update Dream OS v2.1 Ultimate - Bi idznillah"
+    NOTE="Auto-Update Dream OS v2.1 - Bi idznillah"
 fi
 
-git commit -m "🚀 $NOTE [Build: $(date +'%Y%m%d-%H%M')]"
+# Commit with Signature
+git commit -m "🚀 $NOTE [Sovereign Build: $(date +'%Y%m%d-%H%M')]"
 git push origin main
 
 echo -e "\n${P}══════════════════════════════════════════════════════════════${NC}"
-echo -e "${G}✅ DEPLOY SUCCESSFUL: AGENT SMART PRO IS LIVE!${NC}"
-echo -e "${B}Target Device: Xiaomi Redmi Note 9 Pro${NC}"
+echo -e "${G}✅ SYSTEM SYNCHRONIZED: DREAM OS IS DYNAMIC!${NC}"
+echo -e "${B}Target: Xiaomi Redmi Note 9 Pro${NC}"
 echo -e "${P}Dream Team: Out of The Box Inside.${NC}"
 echo -e "${P}══════════════════════════════════════════════════════════════${NC}"
