@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Dream OS v2.1 - Sovereign Enterprise</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0a0f1e">
@@ -10,12 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Amiri&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
             min-height: 100vh;
             color: #e2e8f0;
         }
+        
         #loading-screen {
             position: fixed;
             inset: 0;
@@ -27,6 +29,7 @@
             z-index: 10000;
             transition: opacity 0.5s;
         }
+        
         .loader {
             width: 50px;
             height: 50px;
@@ -35,158 +38,382 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
+        
         @keyframes spin { to { transform: rotate(360deg); } }
+        
         .app-container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 16px;
+            padding-bottom: 80px;
         }
-        .header {
-            background: rgba(16,185,129,0.1);
-            border: 1px solid rgba(16,185,129,0.3);
-            border-radius: 24px;
-            padding: 25px;
+        
+        /* Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0 12px;
+            font-size: 14px;
+            color: #94a3b8;
+            border-bottom: 1px solid rgba(16,185,129,0.1);
+            margin-bottom: 16px;
+        }
+        
+        /* Header Premium */
+        .header-premium {
+            background: linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(139,92,246,0.1) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 32px;
+            padding: 20px;
             text-align: center;
             margin-bottom: 20px;
             cursor: pointer;
+            transition: all 0.4s;
         }
+        
+        .header-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 12px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(16,185,129,0.3);
+        }
+        
+        .header-icon i {
+            font-size: 32px;
+            color: #000;
+        }
+        
         .bismillah {
             font-family: 'Amiri', serif;
             font-size: 24px;
             color: #10b981;
+            margin-bottom: 8px;
         }
+        
+        .shalawat {
+            font-family: 'Amiri', serif;
+            font-size: 16px;
+            color: #34d399;
+            margin-bottom: 8px;
+        }
+        
+        .version-tag {
+            font-size: 10px;
+            color: #64748b;
+            background: rgba(16,185,129,0.2);
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+        
+        /* Language Toggle */
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.5);
+            padding: 6px 12px;
+            border-radius: 30px;
+        }
+        
+        .lang-btn {
+            background: none;
+            border: none;
+            color: #64748b;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 20px;
+        }
+        
+        .lang-btn.active {
+            background: #10b981;
+            color: #000;
+        }
+        
+        /* Login Card */
         .login-card {
             background: rgba(15,23,42,0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 30px;
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 32px;
             border: 1px solid rgba(16,185,129,0.2);
         }
+        
         .input-group {
+            position: relative;
             margin-bottom: 20px;
         }
+        
         .input-group input {
             width: 100%;
-            padding: 14px;
+            padding: 16px 50px 16px 20px;
             background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(16,185,129,0.3);
-            border-radius: 12px;
+            border: 2px solid rgba(16,185,129,0.2);
+            border-radius: 20px;
             color: white;
             font-size: 16px;
         }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #10b981;
+        }
+        
+        .input-group i {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #64748b;
+        }
+        
         .btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             background: linear-gradient(135deg, #10b981, #34d399);
             border: none;
-            border-radius: 12px;
+            border-radius: 20px;
             color: #000;
-            font-weight: bold;
-            cursor: pointer;
+            font-weight: 700;
             font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        .dashboard {
-            display: none;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16,185,129,0.3);
         }
+        
+        /* Dashboard Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .info-card {
+            background: rgba(15,23,42,0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 24px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-3px);
+            border-color: #10b981;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .card-header i {
+            font-size: 24px;
+            color: #10b981;
+        }
+        
+        .card-header span {
+            font-size: 11px;
+            color: #64748b;
+        }
+        
+        .card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .card-sub {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 8px;
+        }
+        
+        /* Module Grid */
         .module-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin: 20px 0;
         }
+        
         .module-card {
             background: rgba(15,23,42,0.6);
-            border: 1px solid rgba(16,185,129,0.2);
-            border-radius: 16px;
-            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 20px;
+            padding: 16px 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
+        
         .module-card:hover {
             transform: translateY(-5px);
             border-color: #10b981;
         }
+        
         .module-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            margin-bottom: 8px;
         }
+        
+        .module-name {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        /* Bottom Navigation */
         .bottom-nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background: rgba(2,6,23,0.95);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(16,185,129,0.3);
+            backdrop-filter: blur(30px);
+            border-top: 1px solid rgba(16,185,129,0.2);
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 10px 0 20px;
             z-index: 1000;
         }
+        
         .nav-item {
             background: none;
             border: none;
             color: #64748b;
             text-align: center;
             cursor: pointer;
-            padding: 8px;
+            padding: 8px 16px;
+            transition: all 0.3s;
+            border-radius: 40px;
         }
-        .nav-item.active {
+        
+        .nav-item i {
+            font-size: 20px;
+        }
+        
+        .nav-item:hover, .nav-item.active {
             color: #10b981;
+            background: rgba(16,185,129,0.1);
         }
+        
+        /* Chat Widget */
         .chat-widget {
             position: fixed;
             bottom: 80px;
             right: 20px;
             z-index: 1000;
         }
+        
         .chat-toggle {
-            width: 60px;
-            height: 60px;
-            background: #10b981;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #10b981, #34d399);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(16,185,129,0.4);
+            transition: all 0.3s;
         }
+        
+        .chat-toggle:hover {
+            transform: scale(1.05);
+        }
+        
         .chat-container {
             display: none;
             position: absolute;
             bottom: 70px;
             right: 0;
-            width: 300px;
+            width: 320px;
             background: #1e293b;
-            border-radius: 16px;
+            border-radius: 24px;
             overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
+        
         .chat-messages {
-            height: 300px;
+            height: 350px;
             overflow-y: auto;
             padding: 12px;
         }
+        
         .chat-input-area {
             display: flex;
             padding: 12px;
             border-top: 1px solid #334155;
+            gap: 8px;
         }
+        
         .chat-input-area input {
             flex: 1;
-            padding: 8px;
-            border-radius: 20px;
+            padding: 10px 14px;
+            border-radius: 24px;
             border: none;
             background: #0f172a;
             color: white;
         }
+        
         .chat-input-area button {
-            margin-left: 8px;
-            padding: 8px 12px;
-            background: #10b981;
+            padding: 10px 16px;
+            background: linear-gradient(135deg, #10b981, #34d399);
             border: none;
-            border-radius: 20px;
+            border-radius: 24px;
+            color: #000;
             cursor: pointer;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #475569;
+            font-size: 10px;
+            border-top: 1px solid rgba(16,185,129,0.1);
+            margin-top: 20px;
+        }
+        
+        .device-info {
+            font-size: 10px;
+            color: #475569;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-up { animation: fadeInUp 0.5s ease; }
+        
+        @media (max-width: 480px) {
+            .app-container { padding: 12px; }
+            .module-grid { gap: 8px; }
+            .module-card { padding: 12px 8px; }
+            .chat-container { width: 280px; right: -10px; }
         }
     </style>
 </head>
@@ -196,7 +423,6 @@
         <p style="margin-top: 20px; color: #10b981;">DREAM OS BOOTING...</p>
     </div>
     <div id="app-shell"></div>
-
-    <script src="shell.js"></script>
+    <script src="shell.js?v=2.1.0"></script>
 </body>
 </html>
