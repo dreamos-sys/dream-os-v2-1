@@ -6,17 +6,36 @@
     <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dream OS v2.3 - Sovereign Command Center</title>
+    <title>Dream OS v2.1 - Sovereign Command Center</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { margin: 0; background: #020617; color: white; font-family: sans-serif; }
-        #loading-screen { position: fixed; inset: 0; background: #020617; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        body { margin: 0; background: #020617; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        #loading-screen { 
+            position: fixed; inset: 0; background: #020617; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; 
+            color: #d4af37; font-weight: bold; letter-spacing: 2px;
+        }
+        .loader { 
+            width: 40px; height: 40px; border: 3px solid rgba(212,175,55,0.1); 
+            border-top: 3px solid #d4af37; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-    <div id="loading-screen">⚡ DREAM OS LOADING...</div>
+    <div id="loading-screen">
+        <div class="loader"></div>
+        ⚡ DREAM OS SOVEREIGN...
+    </div>
     <div id="app-shell"></div>
-    <script type="module" src="shell.js"></script>
+
+    <script type="module">
+        const scriptPath = 'shell.js?v=' + Date.now();
+        import(scriptPath)
+            .then(() => console.log('✅ Sovereign Shell Updated: ' + scriptPath))
+            .catch(err => console.error('❌ Load Error:', err));
+    </script>
 </body>
 </html>
