@@ -1,0 +1,37 @@
+#!/data/data/com.termux/files/usr/bin/node
+
+import { execSync } from 'child_process';
+
+const URL = 'https://lfavawkzvdhdpaaplaiq.supabase.co/rest/v1'; 
+const KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYXZhd2t6dmRoZHBhYXBsYWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5Mjc0NjgsImV4cCI6MjA4OTUwMzQ2OH0.EhwnhAd20lUVaWHHB51UdWCGWxkyTaWIrsPY8xvhwE0';
+
+async function runArchive() {
+    console.log("🧹 [MAINTENANCE]: Memulai proses arsip data SIF...");
+    try {
+        // 1. Tarik data yang sudah 'APPROVED'
+        const getCmd = `curl -s -G "${URL}/permintaan_barang" --data-urlencode "status=eq.approved" -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}"`;
+        const approvedData = JSON.parse(execSync(getCmd).toString());
+
+        if (approvedData.length === 0) {
+            console.log("✅ Database sudah resik, tidak ada data APPROVED untuk diarsip.");
+            return;
+        }
+
+        console.log(`📦 Ditemukan ${approvedData.length} item siap diarsip...`);
+
+        for (const item of approvedData) {
+            // 2. Masukkan ke tabel arsip
+            const payload = JSON.stringify({ title: item.title, description: item.description, status: 'ARCHIVED' });
+            execSync(`curl -s -X POST "${URL}/arsip_permintaan" -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}" -H "Content-Type: application/json" -d '${payload}'`);
+            
+            // 3. Hapus dari tabel utama
+            execSync(`curl -s -X DELETE "${URL}/permintaan_barang?id=eq.${item.id}" -H "apikey: ${KEY}" -H "Authorization: Bearer ${KEY}"`);
+        }
+
+        console.log("🚀 Bismillah Jreng! Data APPROVED berhasil dipindah ke ARSIP.");
+    } catch (err) {
+        console.log("❌ Maintenance Gagal: " + err.message);
+    }
+}
+
+runArchive();

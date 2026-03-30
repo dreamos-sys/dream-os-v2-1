@@ -1,0 +1,14 @@
+#!/data/data/com.termux/files/usr/bin/node
+import { execSync } from 'child_process';
+console.log("\n🏥 [DREAM OS HEALTH-CHECK] Bismillah...");
+try {
+    const cron = execSync('pgrep crond').toString();
+    console.log("✅ CRON SERVICE: SEHAT (PID: " + cron.trim() + ")");
+    const spj = execSync('ls ~/dream-os/spj-gen').toString();
+    console.log("✅ SPJ SYSTEM: TERPASANG");
+    const archive = execSync('ls ~/dream-os/archive-system').toString();
+    console.log("✅ ARCHIVE SYSTEM: TERPASANG");
+    console.log("\n🚀 KESIMPULAN: SISTEM SIAP HAJAR SENIN PAGI!");
+} catch (e) {
+    console.log("⚠️ ADA YANG SAKIT: Cek manual, My Bro!");
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dream OS Test</title>
+    <style>
+        body { background: #020617; color: white; font-family: system-ui; text-align: center; padding: 50px; }
+        #loading { margin-top: 100px; }
+        .spinner { border: 3px solid rgba(16,185,129,0.3); border-top-color: #10b981; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="loading"><div class="spinner"></div><p>Loading Dream OS...</p></div>
+    <div id="app"></div>
+    <script src="shell-min.js"></script>
+</body>
+</html>

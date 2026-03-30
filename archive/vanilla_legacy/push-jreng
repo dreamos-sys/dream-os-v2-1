@@ -1,0 +1,7 @@
+#!/bin/bash
+# 🚀 DREAM OS AUTO-DEPLOY v1.0
+cd ~/dream-os
+git add .
+git commit -m "Bismillah: Dream OS v2.1 Modular (Auto-Patch)"
+git push origin main
+echo "✅ JRENG! Cek link github.io lo sekarang, My Bro!"

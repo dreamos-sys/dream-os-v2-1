@@ -1,0 +1,23 @@
+#!/data/data/com.termux/files/usr/bin/node
+import { execSync } from 'child_process';
+
+const targetEmail = "teknisi@alfikri.sch.id";
+const reportFile = "/data/data/com.termux/files/home/dream-os/LAPORAN_SPJ_TERBARU.txt";
+
+console.log("📨 [CLOUD-SYNC]: Mengirim laporan SPJ ke teknisi@alfikri.sch.id...");
+
+try {
+    const reportContent = execSync(`cat ${reportFile}`).toString();
+    const tgl = new Date().toLocaleDateString('id-ID');
+    
+    // Kita rakit format emailnya
+    const emailBody = `Subject: [DREAM OS] LAPORAN MAINTENANCE SIF - ${tgl}\n\n${reportContent}`;
+    
+    // Kirim pake msmtp (Asumsi config SMTP sudah diisi di ~/.msmtprc)
+    // Untuk sekarang kita simpan dulu ke antrian log kalau SMTP belum login
+    execSync(`echo "${emailBody}" | msmtp ${targetEmail}`);
+    
+    console.log("✅ CLOUD SYNC SUCCESS: Laporan meluncur ke SIF Al-Fikri!");
+} catch (e) {
+    console.log("⚠️ CLOUD SYNC DELAYED: Cek koneksi internet atau config SMTP!");
+}

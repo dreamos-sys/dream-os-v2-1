@@ -1,0 +1,7 @@
+#!/bin/bash
+# 1. Paksa IPv4
+export NODE_OPTIONS="--dns-result-order=ipv4first"
+# 2. Surat Sakti: Abaikan Error SSL di lingkungan Termux
+export NODE_TLS_REJECT_UNAUTHORIZED='0'
+
+node ~/dream-os/js/core/ai-agent-brain.js "$1"

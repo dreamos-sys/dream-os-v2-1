@@ -1,0 +1,26 @@
+// --- DREAM OS AUTO-GENERATED V 2.1 ---
+// Last Sync: Sun Mar 29 01:35:50 WIB 2026
+window.MODULES = [
+  { id: 'about', name: 'About', icon: 'fa-folder', description: 'Accessing About...' },
+  { id: 'ai-chat', name: 'Ai Chat', icon: 'fa-robot-astronat', description: 'Accessing Ai Chat...' },
+  { id: 'asset', name: 'Asset', icon: 'fa-vcard', description: 'Accessing Asset...' },
+  { id: 'audit', name: 'Audit', icon: 'fa-clipboard-list', description: 'Accessing Audit...' },
+  { id: 'booking', name: 'Booking', icon: 'fa-calendar-check', description: 'Accessing Booking...' },
+  { id: 'commandcenter', name: 'Commandcenter', icon: 'fa-satellite-dish', description: 'Accessing Commandcenter...' },
+  { id: 'config', name: 'Config', icon: 'fa-folder', description: 'Accessing Config...' },
+  { id: 'dana', name: 'Dana', icon: 'fa-folder', description: 'Accessing Dana...' },
+  { id: 'ghost', name: 'Ghost', icon: 'fa-ghost', description: 'Accessing Ghost...' },
+  { id: 'gudang', name: 'Gudang', icon: 'fa-boxes', description: 'Accessing Gudang...' },
+  { id: 'home', name: 'Home', icon: 'fa-folder', description: 'Accessing Home...' },
+  { id: 'inventaris', name: 'Inventaris', icon: 'fa-boxes', description: 'Accessing Inventaris...' },
+  { id: 'janitor-indoor', name: 'Janitor Indoor', icon: 'fa-broom', description: 'Accessing Janitor Indoor...' },
+  { id: 'janitor-outdoor', name: 'Janitor Outdoor', icon: 'fa-broom', description: 'Accessing Janitor Outdoor...' },
+  { id: 'k3', name: 'K3', icon: 'fa-hard-hat', description: 'Accessing K3...' },
+  { id: 'maintenance', name: 'Maintenance', icon: 'fa-tools', description: 'Accessing Maintenance...' },
+  { id: 'profile', name: 'Profile', icon: 'fa-user-circle', description: 'Accessing Profile...' },
+  { id: 'qr', name: 'Qr', icon: 'fa-qrcode', description: 'Accessing Qr...' },
+  { id: 'scanner', name: 'Scanner', icon: 'fa-qrcode', description: 'Accessing Scanner...' },
+  { id: 'sekuriti', name: 'Sekuriti', icon: 'fa-shield-alt', description: 'Accessing Sekuriti...' },
+  { id: 'settings', name: 'Settings', icon: 'fa-cog', description: 'Accessing Settings...' },
+  { id: 'stok', name: 'Stok', icon: 'fa-boxes', description: 'Accessing Stok...' },
+];

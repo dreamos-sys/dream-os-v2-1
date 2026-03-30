@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes">
+<title>DREAM OS V2.1 - AI AGENT</title>
+<base href="/dream/">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="./assets/img/icon-192.png">
+<link rel="apple-touch-icon" href="./assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#10b981">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#020617;color:#fff;font-family:Inter,sans-serif;min-height:100vh}
+#app{max-width:480px;margin:0 auto;min-height:100vh;position:relative}
+#loading{position:fixed;inset:0;background:linear-gradient(135deg,#020617,#0f172a);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
+.spinner{width:60px;height:60px;border:4px solid rgba(16,185,129,0.2);border-top-color:#10b981;border-radius:50%;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{margin-top:20px;color:#10b981;font-size:10px;letter-spacing:3px;text-transform:uppercase}
+.logo{width:100px;height:100px;margin-bottom:20px;border-radius:20px;box-shadow:0 0 40px rgba(16,185,129,0.4)}
+.btn{margin-top:20px;padding:18px 50px;background:linear-gradient(135deg,#10b981,#059669);border:none;border-radius:30px;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+#login{position:fixed;inset:0;background:#020617;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9998;padding:20px}
+.login-box{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.2);border-radius:30px;padding:40px 30px;width:100%;max-width:320px}
+.bismillah{font-family:Amiri,serif;font-size:28px;color:#10b981;margin-bottom:8px;text-align:center}
+.subtitle{font-size:8px;color:rgba(16,185,129,0.6);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:30px}
+.input-group{position:relative;margin-bottom:12px}
+.input{width:100%;background:rgba(2,6,23,0.6);border:1px solid rgba(16,185,129,0.2);padding:14px 45px 14px 14px;border-radius:20px;color:#fff;font-size:14px;text-align:center;outline:none}
+.input:focus{border-color:#10b981}
+.toggle-password{position:absolute;right:15px;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(16,185,129,0.6);cursor:pointer;font-size:16px}
+.toggle-password:hover{color:#10b981}
+.btn-login{width:100%;background:#10b981;border:none;padding:16px;border-radius:20px;color:#020617;font-size:11px;font-weight:800;text-transform:uppercase;cursor:pointer;margin-top:10px}
+.error{color:#ef4444;font-size:10px;text-align:center;margin-top:15px;display:none}
+.login-btn{margin-top:15px;padding:15px 40px;background:transparent;border:1px solid rgba(16,185,129,0.3);color:#10b981;border-radius:25px;font-size:14px;font-weight:700;cursor:pointer}
+#dashboard{display:block;padding-bottom:100px}.header{position:sticky;top:0;z-index:100;background:rgba(2,6,23,0.95);backdrop-filter:blur(20px);padding:20px 15px;border-bottom:1px solid rgba(16,185,129,0.2)}
+.bismillah-lg{font-family:Amiri,serif;font-size:32px;color:#10b981;margin-bottom:5px;text-align:center;cursor:pointer}
+.shalawat{font-family:Amiri,serif;font-size:16px;color:rgba(16,185,129,0.7);text-align:center;margin-bottom:10px;cursor:pointer}
+.title{font-size:14px;color:#10b981;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;text-align:center}
+.user-info{font-size:10px;color:rgba(148,163,184,0.7);margin-top:5px;text-align:center}
+.ghost-indicator{position:fixed;top:15px;right:15px;background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 12px;border-radius:20px;font-size:9px;font-weight:700;cursor:pointer;z-index:101;display:flex;align-items:center;gap:5px}
+.carousel-container{background:rgba(15,23,42,0.9);border:2px solid rgba(16,185,129,0.3);border-radius:20px;padding:20px;margin:15px;position:relative;overflow:hidden}
+.carousel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.carousel-title{color:#10b981;font-size:14px;font-weight:700}
+.carousel-controls{display:flex;gap:8px}
+.carousel-btn{background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.3);color:#10b981;padding:6px 12px;border-radius:8px;font-size:12px;cursor:pointer}
+.carousel-content{min-height:200px;background:rgba(2,6,23,0.8);border-radius:15px;padding:20px}
+.carousel-progress{margin-top:15px;background:rgba(2,6,23,0.8);border-radius:10px;height:6px;overflow:hidden}
+.carousel-progress-bar{width:100%;height:100%;background:linear-gradient(90deg,#10b981,#059669);border-radius:10px;transition:width 1s linear}
+.carousel-dots{display:flex;justify-content:center;gap:8px;margin-top:15px}.carousel-dot{width:10px;height:10px;border-radius:50%;border:2px solid rgba(16,185,129,0.3);background:transparent;cursor:pointer}
+.carousel-dot.active{background:#10b981;border-color:#10b981}
+.module-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;padding:15px}
+.module-card{background:rgba(16,185,129,0.05);border:1px solid rgba(16,185,129,0.1);border-radius:25px;padding:25px 15px;text-align:center;cursor:pointer;transition:all 0.2s}
+.module-card:active{transform:scale(0.9);background:rgba(16,185,129,0.15)}
+.module-icon{width:60px;height:60px;margin:0 auto 10px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:30px}
+.module-label{font-size:9px;color:rgba(16,185,129,0.8);text-transform:uppercase;font-weight:600}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:70px;background:rgba(2,6,23,0.95);backdrop-filter:blur(20px);border-top:1px solid rgba(16,185,129,0.2);display:flex;justify-content:space-around;align-items:center;z-index:1000;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{display:flex;flex-direction:column;align-items:center;color:rgba(148,163,184,0.8);font-size:9px;cursor:pointer;padding:8px 12px;border-radius:12px;transition:all 0.3s;position:relative}
+.nav-item.active{color:#10b981;background:rgba(16,185,129,0.1)}
+.nav-icon{font-size:20px;margin-bottom:4px;transition:transform 0.3s}
+.nav-item.active .nav-icon{transform:translateY(-3px)}
+.nav-badge{position:absolute;top:5px;right:5px;background:#ef4444;color:white;font-size:8px;padding:2px 5px;border-radius:10px;font-weight:700;min-width:16px;text-align:center}
+.fab-container{position:fixed;bottom:90px;right:20px;display:flex;flex-direction:column;gap:12px;z-index:999}
+.fab{width:50px;height:50px;border-radius:50%;border:none;color:white;font-size:18px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.3s;display:flex;align-items:center;justify-content:center}
+.fab:hover{transform:scale(1.1)}
+.fab-ai{background:linear-gradient(135deg,#10b981,#059669)}
+</style>
+</head>
+<body>
+<div id="app">
+<div id="loading">
+<img src="./assets/img/icon-192.png" alt="Dream OS" class="logo">
+<div class="spinner"></div>
+<div class="loading-text">🤖 AI Agent Loading...</div>
+<button class="btn" onclick="showLogin()">🔐 LOGIN</button>
+</div>
+<div id="login">
+<div class="bismillah">بِسْمِ اللَّهِ</div>
+<div class="subtitle">Kekuatan Jiwa Shalawat</div>
+<div class="login-box">
+<div style="font-size:11px;color:#10b981;text-transform:uppercase;letter-spacing:2px;margin-bottom:15px;text-align:center;font-weight:700">🔐 Authorize Access</div>
+<div class="input-group">
+<input type="text" id="username" class="input" placeholder="Username">
+</div>
+<div class="input-group"><input type="password" id="password" class="input" placeholder="Password">
+<button type="button" class="toggle-password" onclick="togglePassword()"><i class="fas fa-eye" id="eye-icon"></i></button>
+</div>
+<button class="btn-login" onclick="doLogin()">🔓 UNLOCK SYSTEM</button>
+<div id="login-error" class="error">⚠️ ACCESS DENIED</div>
+<button class="login-btn" onclick="backToLoading()">← Back</button>
+</div>
+</div>
+<div id="dashboard" style="display:none">
+<div class="header">
+<div class="bismillah-lg" data-ghost="true" onclick="handleGhostTap()">بِسْمِ اللَّهِ</div>
+<div class="shalawat" data-ghost="true" onclick="handleGhostTap()">اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ</div>
+<div class="title">DREAM OS V2.1</div>
+<div class="user-info" id="user-display">Welcome</div><div class="ghost-indicator" onclick="openGhostMode()">👻 Ghost</div>
+</div>
+<div class="carousel-container">
+<div class="carousel-header">
+<div class="carousel-title" id="slide-title">👋 Say Greeting</div>
+<div class="carousel-controls">
+<button class="carousel-btn" onclick="prevSlide()">◀</button>
+<button class="carousel-btn" onclick="togglePause()" id="pause-btn">⏸️</button>
+<button class="carousel-btn" onclick="nextSlide()">▶</button>
+</div>
+</div>
+<div id="carousel-content" class="carousel-content"></div>
+<div class="carousel-progress"><div class="carousel-progress-bar" id="progress-bar"></div></div>
+<div class="carousel-dots" id="carousel-dots"></div>
+</div>
+<div class="module-grid" id="module-grid"></div>
+</div>
+<nav class="nav" id="bottom-nav" style="display:none">
+<div class="nav-item active" data-target="home" onclick="navigateTo('home')"><i class="fas fa-home nav-icon"></i><span>Home</span></div>
+<div class="nav-item" data-target="profile" onclick="navigateTo('profile')"><i class="fas fa-user nav-icon"></i><span>Profile</span></div>
+<div class="nav-item" data-target="qr" onclick="openQRScanner()"><i class="fas fa-qrcode nav-icon"></i><span>QR</span></div>
+<div class="nav-item" data-target="alerts" onclick="openNotifications()"><i class="fas fa-bell nav-icon"></i><span>Alerts</span><span class="nav-badge" id="badge-notif" style="display:none">0</span></div>
+<div class="nav-item" data-target="settings" onclick="navigateTo('settings')"><i class="fas fa-cog nav-icon"></i><span>Settings</span></div>
+</nav>
+<div class="fab-container" id="fab-container" style="display:none">
+<button class="fab fab-ai" onclick="openAIChat()" title="AI Assistant"><i class="fas fa-robot"></i></button>
+</div>
+</div>
+<script>
+const MODULES_CONFIG = {
+  'commandcenter': { name: 'Command', icon: '🎯', color: '#8b5cf6' },
+  'booking': { name: 'Booking', icon: '📅', color: '#3b82f6' },
+  'k3': { name: 'K3', icon: '⚠️', color: '#f59e0b' },
+  'sekuriti': { name: 'Security', icon: '🛡️', color: '#10b981' },
+  'janitor': { name: 'Janitor', icon: '🧹', color: '#ec4899' },
+  'stok': { name: 'Stok', icon: '📦', color: '#f97316' },
+  'maintenance': { name: 'Maintenance', icon: '🔧', color: '#06b6d4' },  'inventaris': { name: 'Inventaris', icon: '📋', color: '#6366f1' },
+  'gudang': { name: 'Gudang', icon: '🏭', color: '#84cc16' }
+};
+const PASS_HASH = {
+  'developer': 'b15m1ll4h012443410',
+  'master': 'Mr.M_Architect2025',
+  'admin': '4dm1n_AF6969@00',
+  'sekuriti': 'LHPSsec_AF2025',
+  'janitor': 'CHCS_AF@003',
+  'stok': 'SACS_AF@004',
+  'maintenance': 'M41n4F@234',
+  'inventaris': '4dm1n6969@01',
+  'gudang': '4dm1n9696@02',
+  'asset': '4553Tumum_AF@1112',
+  'booking': 'user@1234',
+  'k3': 'user@2345'
+};
+let currentUser = null;
+let currentView = 'home';
+const slides = [
+  {id:1,title:'👋 Say Greeting',icon:'👋',color:'#10b981'},
+  {id:2,title:'📅 Booking',icon:'📅',color:'#3b82f6'},
+  {id:3,title:'⚠️ K3',icon:'⚠️',color:'#f59e0b'},
+  {id:4,title:'🌤️ Weather',icon:'🌤️',color:'#06b6d4'},
+  {id:5,title:'👔 Management',icon:'👔',color:'#8b5cf6'},
+  {id:6,title:'🏢 Info Umum',icon:'🏢',color:'#14b8a6'},
+  {id:7,title:'💬 Ucapan',icon:'💬',color:'#f97316'}
+];
+let currentSlide = 0;
+let slideInterval = null;
+let isPaused = false;
+
+function showLogin(){document.getElementById('loading').style.display='none';document.getElementById('login').style.display='flex';}
+function backToLoading(){document.getElementById('login').style.display='none';document.getElementById('loading').style.display='flex';}
+function togglePassword(){const pass=document.getElementById('password');const eye=document.getElementById('eye-icon');if(pass.type==='password'){pass.type='text';eye.classList.remove('fa-eye');eye.classList.add('fa-eye-slash');}else{pass.type='password';eye.classList.remove('fa-eye-slash');eye.classList.add('fa-eye');}}
+function doLogin(){sessionStorage.clear();localStorage.removeItem('dream_session');localStorage.removeItem('dream_user');const user=document.getElementById('username').value.toLowerCase().trim();const pass=document.getElementById('password').value;const error=document.getElementById('login-error');console.log('[Login] Attempt:',user,'Password length:',pass.length);console.log('[Login] Expected:',PASS_HASH[user]);if(PASS_HASH[user]&&PASS_HASH[user]===pass){sessionStorage.setItem('dream_session','ACTIVE');sessionStorage.setItem('dream_user',user.toUpperCase());currentUser={name:user.toUpperCase(),role:user.toUpperCase()};document.getElementById('login').style.display='none';document.getElementById('dashboard').style.display='block';document.getElementById('bottom-nav').style.display='flex';document.getElementById('fab-container').style.display='flex';document.getElementById('user-display').textContent='Welcome, '+user.toUpperCase();startCarousel();loadModules();toast('✅ Access Granted!');}else{error.style.display='block';error.textContent='⚠️ ACCESS DENIED - Check password!';if(navigator.vibrate)navigator.vibrate([50,50,50]);console.log('[Login] Failed! Expected:',PASS_HASH[user],'Got:',pass);}}
+let ghostTapCount=0;let ghostLastTap=0;function handleGhostTap(){const now=Date.now();if(now-ghostLastTap>800)ghostTapCount=0;ghostTapCount++;ghostLastTap=now;if(ghostTapCount>=5){openGhostMode();ghostTapCount=0;}}
+function openGhostMode(){alert('👻 GHOST MODE\n\n5x Tap detected!\n\nEnter password: dreamos[rakaat]');}
+function startCarousel(){renderSlide();renderDots();if(slideInterval)clearInterval(slideInterval);slideInterval=setInterval(()=>{if(!isPaused)nextSlide();},7000);}
+function nextSlide(){currentSlide=(currentSlide+1)%slides.length;renderSlide();renderDots();resetProgress();}
+function prevSlide(){currentSlide=(currentSlide-1+slides.length)%slides.length;renderSlide();renderDots();resetProgress();}
+function togglePause(){isPaused=!isPaused;document.getElementById('pause-btn').textContent=isPaused?'▶️':'⏸️';}
+function renderSlide(){const slide=slides[currentSlide];document.getElementById('slide-title').textContent=slide.title;document.getElementById('carousel-content').innerHTML=getSlideContent(currentSlide);}
+function renderDots(){document.getElementById('carousel-dots').innerHTML=slides.map((s,i)=>'<button class="carousel-dot '+(i===currentSlide?'active':'')+'" onclick="goToSlide('+i+')"></button>').join('');}
+function goToSlide(i){currentSlide=i;renderSlide();renderDots();resetProgress();}
+function resetProgress(){const bar=document.getElementById('progress-bar');bar.style.width='100%';bar.style.transition='none';setTimeout(()=>{bar.style.transition='width 7s linear';bar.style.width='0%';},50);}
+function getSlideContent(i){const contents=['<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">👋</div><h2 style="color:#10b981;margin-bottom:10px;">Selamat Datang</h2><p style="color:rgba(148,163,184,0.7);">Dream OS v2.1</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">📅</div><h2 style="color:#3b82f6;margin-bottom:10px;">Booking Hari Ini</h2><p style="color:rgba(148,163,184,0.7);">12 Bookings · 3 Pending</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">⚠️</div><h2 style="color:#f59e0b;margin-bottom:10px;">K3 Reports</h2><p style="color:rgba(148,163,184,0.7);">3 Pending · 7 Resolved</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">🌤️</div><h2 style="color:#06b6d4;margin-bottom:10px;">Weather</h2><p style="color:rgba(148,163,184,0.7);">28°C · Depok, ID</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">👔</div><h2 style="color:#8b5cf6;margin-bottom:10px;">Info Management</h2><p style="color:rgba(148,163,184,0.7);">5 Approvals Pending</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">🏢</div><h2 style="color:#14b8a6;margin-bottom:10px;">Info Umum</h2><p style="color:rgba(148,163,184,0.7);">3 Tasks Today</p></div>','<div style="text-align:center;padding:20px;"><div style="font-size:50px;margin-bottom:15px;">💬</div><h2 style="color:#f97316;margin-bottom:10px;">Ucapan Kabar</h2><p style="color:rgba(148,163,184,0.7);">Birthday: Bapak Hanung</p></div>'];return contents[i];}
+function loadModules(){const grid=document.getElementById('module-grid');if(!grid){console.error('Grid not found!');return;}grid.innerHTML='';for(const[modId,modConfig]of Object.entries(MODULES_CONFIG)){const card=document.createElement('div');card.className='module-card';card.onclick=()=>openModule(modId);card.innerHTML='<div class="module-icon" style="background:linear-gradient(135deg,'+modConfig.color+',#059669);">'+modConfig.icon+'</div><div class="module-label">'+modConfig.name+'</div>';grid.appendChild(card);}console.log('[Modules] Loaded',MODULES_CONFIG.length,'modules');}
+async function openModule(modId){if(modId==='commandcenter'){try{const response=await fetch('./modules/commandcenter/module.js');const moduleCode=await response.text();const moduleBlob=new Blob([moduleCode],{type:'application/javascript'});const moduleUrl=URL.createObjectURL(moduleBlob);const module=await import(moduleUrl);document.getElementById('dashboard').innerHTML=module.default.render(currentUser);if(module.default.afterRender)module.default.afterRender();}catch(error){toast('❌ Failed to load Command Center');console.error(error);}}else if(modId==='booking'){try{const response=await fetch('./modules/booking/module.js');const moduleCode=await response.text();const moduleBlob=new Blob([moduleCode],{type:'application/javascript'});const moduleUrl=URL.createObjectURL(moduleBlob);const module=await import(moduleUrl);document.getElementById('dashboard').innerHTML=module.default.render(currentUser);if(module.default.afterRender)module.default.afterRender();}catch(error){toast('📅 Loading Booking...');}}else if(modId==='k3'){try{const response=await fetch('./modules/k3/module.js');const moduleCode=await response.text();const moduleBlob=new Blob([moduleCode],{type:'application/javascript'});const moduleUrl=URL.createObjectURL(moduleBlob);const module=await import(moduleUrl);document.getElementById('dashboard').innerHTML=module.default.render(currentUser);if(module.default.afterRender)module.default.afterRender();}catch(error){toast('⚠️ Loading K3...');}}else{toast('🎚️ Loading: '+MODULES_CONFIG[modId].name+'...');}}
+window.navigateTo=function(view){currentView=view;document.querySelectorAll('.nav-item').forEach(btn=>{btn.classList.remove('active');if(btn.dataset.target===view)btn.classList.add('active');});if(view==='home'){document.getElementById('dashboard').style.display='block';document.getElementById('fab-container').style.display='flex';loadModules();}else if(view==='profile'){showProfileView();}else if(view==='settings'){showSettingsView();}};function showProfileView(){document.getElementById('dashboard').innerHTML='<div style="padding:20px;text-align:center;"><div style="width:80px;height:80px;margin:0 auto 20px;border-radius:50%;background:rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center;font-size:32px;color:#10b981;">'+(currentUser?.name?.charAt(0)||'D')+'</div><h2 style="color:#e2e8f0;margin-bottom:5px;">'+(currentUser?.name||'User')+'</h2><p style="color:#10b981;font-size:12px;margin-bottom:20px;">'+(currentUser?.role||'USER')+'</p><button onclick="logout()" style="width:100%;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:15px;border-radius:15px;font-size:12px;font-weight:700;cursor:pointer;">🚪 Logout</button></div>';}
+function showSettingsView(){document.getElementById('dashboard').innerHTML='<div style="padding:20px;"><h2 style="color:#e2e8f0;margin-bottom:20px;">⚙️ Settings</h2><button onclick="logout()" style="width:100%;background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.3);color:#ef4444;padding:15px;border-radius:15px;font-size:12px;font-weight:700;cursor:pointer;">🚪 Logout</button></div>';}
+function openQRScanner(){alert('📷 QR Scanner');}
+function openNotifications(){alert('🔔 Notifications');}
+function openAIChat(){const modal=document.createElement('div');modal.style.cssText='position:fixed;inset:0;background:rgba(2,6,23,0.9);z-index:99999;display:flex;align-items:center;justify-content:center;';modal.innerHTML='<div style="background:#0f172a;border:1px solid rgba(16,185,129,0.2);border-radius:20px;width:90%;max-width:500px;max-height:80vh;display:flex;flex-direction:column;"><div style="padding:20px;border-bottom:1px solid rgba(16,185,129,0.2);display:flex;justify-content:space-between;align-items:center;"><h3 style="color:#10b981;margin:0;font-size:16px;">🤖 Dream AI Assistant</h3><button onclick="this.closest(\'div[style*=fixed]\').remove()" style="background:none;border:none;color:#ef4444;font-size:20px;cursor:pointer;">✕</button></div><div id="ai-chat-messages" style="flex:1;overflow-y:auto;padding:20px;max-height:400px;"></div><div style="padding:20px;border-top:1px solid rgba(16,185,129,0.2);display:flex;gap:10px;"><input type="text" id="ai-chat-input" placeholder="Tanya sesuatu..." style="flex:1;background:rgba(15,23,42,0.8);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:12px;color:#e2e8f0;outline:none;" onkeypress="if(event.key===\'Enter\')sendAIMessage()"><button onclick="sendAIMessage()" style="background:#10b981;color:white;border:none;padding:12px 24px;border-radius:12px;font-weight:700;cursor:pointer;">Kirim</button></div></div>';document.body.appendChild(modal);addAIMessage('ai','Assalamualaikum! Saya Dream AI Assistant. Ada yang bisa saya bantu? 🤖');}
+function sendAIMessage(){const input=document.getElementById('ai-chat-input');const message=input.value.trim();if(!message)return;addAIMessage('user',message);input.value='';addAIMessage('ai','AI response...');}
+function addAIMessage(role,text){const messages=document.getElementById('ai-chat-messages');const div=document.createElement('div');div.style.cssText='margin-bottom:15px;padding:12px 16px;border-radius:12px;max-width:80%;'+(role==='ai'?'background:rgba(16,185,129,0.1);':'background:rgba(59,130,246,0.2);margin-left:auto;');div.innerHTML='<span style="color:'+(role==='ai'?'#10b981':'#3b82f6')+';font-size:10px;font-weight:700;">'+(role==='ai'?'🤖 AI':'👤 YOU')+'</span><p style="color:#e2e8f0;font-size:13px;margin-top:5px;">'+text+'</p>';messages.appendChild(div);messages.scrollTop=messages.scrollHeight;}
+function logout(){if(confirm('Logout from system?')){sessionStorage.clear();localStorage.clear();location.reload();}}
+function toast(msg){var t=document.createElement('div');t.style.cssText='position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#10b981;color:#020617;padding:12px 24px;border-radius:30px;font-weight:700;font-size:11px;z-index:10000;';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),300);},2000);}
+document.addEventListener('keypress',e=>{if(e.key==='Enter'&&document.getElementById('login').style.display==='flex')doLogin();});
+if('serviceWorker'in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').then(reg=>{console.log('✅ SW registered:',reg.scope);navigator.serviceWorker.ready.then(()=>{caches.keys().then(names=>{names.forEach(n=>caches.delete(n));console.log('✅ Old cache cleared!');});});}).catch(err=>console.error('❌ SW registration failed:',err));});}
+</script>
+</body>
+</html>

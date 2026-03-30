@@ -1,0 +1,24 @@
+
+=========================================
+      LAPORAN PERMINTAAN BARANG SIF
+           DREAM OS VER. 13.0
+=========================================
+Tanggal: 29 Maret 2026
+Status Jaringan: ISO Standard 27001
+-----------------------------------------
+1. [❌] PERMINTAAN ATK
+   Detail: Butuh kertas dan pulpen
+   Status: PENDING
+-----------------------------------------
+2. [✅] PERMINTAAN KEBERSIHAN
+   Detail: Sabun cuci piring
+   Status: APPROVED
+-----------------------------------------
+
+Mengetahui,
+Bapak Hanung Budianto S. E (Approver)
+Bapak Erwinsyah (Coordinator)
+
+Note: The Power Soul Of Shalawat
+=========================================
+

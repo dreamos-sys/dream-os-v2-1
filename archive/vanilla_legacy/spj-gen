@@ -1,0 +1,59 @@
+#!/data/data/com.termux/files/usr/bin/node
+
+import { execSync } from 'child_process';
+
+/**
+ * 📝 SPJ-GENERATOR v1.0 (Dream OS ISO Edition)
+ * Laporan Otomatis SIF Al-Fikri
+ */
+
+const SUPABASE_URL = 'https://lfavawkzvdhdpaaplaiq.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxmYXZhd2t6dmRoZHBhYXBsYWlxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM5Mjc0NjgsImV4cCI6MjA4OTUwMzQ2OH0.EhwnhAd20lUVaWHHB51UdWCGWxkyTaWIrsPY8xvhwE0';
+
+async function generateSPJ() {
+    console.log("📄 [SPJ-SYSTEM]: Mengolah data permintaan barang...");
+    try {
+        const command = `curl -s -X GET "${SUPABASE_URL}/rest/v1/permintaan_barang?select=*" -H "apikey: ${SUPABASE_KEY}" -H "Authorization: Bearer ${SUPABASE_KEY}"`;
+        const response = execSync(command).toString();
+        const data = JSON.parse(response);
+
+        const tgl = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+        let report = `
+=========================================
+      LAPORAN PERMINTAAN BARANG SIF
+           DREAM OS VER. 13.0
+=========================================
+Tanggal: ${tgl}
+Status Jaringan: ISO Standard 27001
+-----------------------------------------
+`;
+
+        data.forEach((item, index) => {
+            const statusIcon = (item.status === 'pending') ? '❌' : '✅';
+            report += `${index + 1}. [${statusIcon}] ${item.title.toUpperCase()}\n`;
+            report += `   Detail: ${item.description}\n`;
+            report += `   Status: ${item.status.toUpperCase()}\n`;
+            report += `-----------------------------------------\n`;
+        });
+
+        report += `
+Mengetahui,
+Bapak Hanung Budianto S. E (Approver)
+Bapak Erwinsyah (Coordinator)
+
+Note: "The Power Soul Of Shalawat"
+=========================================
+`;
+        console.log(report);
+        
+        // Simpan ke file teks biar aman
+        execSync(`echo "${report}" > ~/dream-os/LAPORAN_SPJ_TERBARU.txt`);
+        console.log("✅ Laporan berhasil disimpan ke: ~/dream-os/LAPORAN_SPJ_TERBARU.txt");
+
+    } catch (err) {
+        console.log("❌ Gagal Generate SPJ: " + err.message);
+    }
+}
+
+generateSPJ();
