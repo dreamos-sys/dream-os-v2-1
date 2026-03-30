@@ -1,57 +1,49 @@
 "use client";
-import React, { useState, useEffect } from 'react';
 
-export default function GlobalDashboard() {
-  const modules = [
-    { id: 'k3', name: 'K3 & Safety', icon: '⚠️', color: 'from-amber-500' },
-    { id: 'asset', name: 'ISO Assets', icon: '📦', color: 'from-emerald-500' },
-    { id: 'ghost', name: 'Ghost Sec', icon: '🛡️', color: 'from-slate-700' },
-    { id: 'gudang', name: 'Stok Gudang', icon: '🏗️', color: 'from-orange-500' },
-    { id: 'admin', name: 'Admin ISO', icon: '📋', color: 'from-blue-500' },
-    { id: 'spj', name: 'Laporan SPJ', icon: '📊', color: 'from-cyan-500' },
-    { id: 'approval', name: 'Approval', icon: '✍️', color: 'from-purple-500' },
-    { id: 'mon', name: 'Real-time', icon: '🖥️', color: 'from-red-500' },
-    { id: 'backup', name: 'Cloud Sync', icon: '💾', color: 'from-indigo-500' }
-  ];
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function Home() {
+  const router = useRouter();
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push('/login');
+    }, 3500);
+    
+    const progressTimer = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(progressTimer);
+          return 100;
+        }
+        return prev + 5;
+      });
+    }, 150);
+    
+    return () => {
+      clearTimeout(timer);
+      clearInterval(progressTimer);
+    };
+  }, [router]);
 
   return (
-    <div className="p-4 md:p-8 max-w-lg mx-auto">
-      <header className="mb-10 text-center animate-pulse">
-        <h1 className="text-4xl font-amiri text-emerald-400 drop-shadow-[0_0_15px_rgba(52,211,153,0.5)]">بِسْمِ اللَّهِ</h1>
-        <p className="text-[10px] tracking-[0.4em] opacity-50 mt-2 uppercase">Neural Sovereignty v2.1</p>
-      </header>
-
-      {/* Stats Board */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-4 backdrop-blur-xl">
-          <div className="text-[8px] opacity-50 uppercase">Immunity</div>
-          <div className="text-xl font-bold text-emerald-400">100% 🛡️</div>
-        </div>
-        <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-4 backdrop-blur-xl">
-          <div className="text-[8px] opacity-50 uppercase">Global Status</div>
-          <div className="text-xl font-bold text-emerald-400">ACTIVE 🟢</div>
-        </div>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #F2F2F7 0%, #ffffff 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <img src="/assets/img/icon-192.png" alt="Dream OS" style={{ width: '120px', height: '120px', borderRadius: '28px', boxShadow: '0 15px 50px rgba(0,0,0,0.2)', marginBottom: '30px' }} />      
+      <div style={{ fontFamily: 'Amiri, serif', fontSize: '42px', color: '#10b981', marginBottom: '15px', textAlign: 'center' }}>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+      <div style={{ fontFamily: 'Amiri, serif', fontSize: '18px', color: 'rgba(16,185,129,0.8)', textAlign: 'center', marginBottom: '30px' }}>اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ</div>
+      
+      <div className="ios-loader" style={{ marginBottom: '25px' }}></div>
+      
+      <p style={{ fontSize: '13px', color: '#10b981', letterSpacing: '3px', textTransform: 'uppercase', fontWeight: '600', marginBottom: '10px' }}>🤖 AI Agent Loading...</p>
+      <p style={{ fontSize: '11px', color: '#8e8e93', letterSpacing: '2px', textTransform: 'uppercase' }}>Neural Sovereignty v14.0</p>
+      
+      {/* Progress Bar */}
+      <div style={{ width: '200px', height: '6px', background: '#e5e5ea', borderRadius: '3px', marginTop: '25px', overflow: 'hidden' }}>
+        <div style={{ width: `${progress}%`, height: '100%', background: 'linear-gradient(90deg, #10b981, #059669)', borderRadius: '3px', transition: 'width 0.2s' }}></div>
       </div>
-
-      {/* 9 Grid Modules */}
-      <div className="grid grid-cols-3 gap-4">
-        {modules.map((m) => (
-          <button key={m.id} className="group relative aspect-square bg-slate-900/50 border border-emerald-500/10 rounded-[2rem] flex flex-col items-center justify-center transition-all hover:border-emerald-500/40 active:scale-90">
-            <div className={`text-3xl mb-2 group-hover:scale-110 transition-transform`}>{m.icon}</div>
-            <span className="text-[9px] font-bold opacity-60 group-hover:opacity-100 uppercase">{m.name}</span>
-            <div className={`absolute inset-0 bg-gradient-to-br ${m.color} to-transparent opacity-0 group-hover:opacity-5 rounded-[2rem] transition-opacity`}></div>
-          </button>
-        ))}
-      </div>
-
-      <div className="mt-12 text-center">
-        <div className="text-[12px] font-amiri text-emerald-500/60 italic leading-loose">
-          اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ
-        </div>
-        <div className="text-[7px] opacity-30 mt-4 tracking-tighter">
-          DESIGNED BY GHOST ARCHITECT • DEPLOYED WORLDWIDE
-        </div>
-      </div>
+      <p style={{ fontSize: '10px', color: '#8e8e93', marginTop: '8px' }}>{progress}%</p>
     </div>
   );
 }
