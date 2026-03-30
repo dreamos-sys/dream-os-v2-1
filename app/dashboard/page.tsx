@@ -2,15 +2,125 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import initTinyGo, { getImmunityLevel, getSystemPerformance, runNeuralSimulation } from '@/lib/wasm/wasm-loader';
+import { store } from '@/lib/data/global-store';
+import initTinyGo, { getSystemPerformance } from '@/lib/wasm/wasm-loader';
+import GhostShield from '@/lib/security/ghost-shield';
 
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState('DEVELOPER');
-  const [immunity, setImmunity] = useState(100);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [activeNav, setActiveNav] = useState('home');
   const [tinyGoReady, setTinyGoReady] = useState(false);
   const [systemStats, setSystemStats] = useState<any>(null);
+  const [slideData, setSlideData] = useState<any[]>([]);
+
+  // 7 Integrated Slides
+  const slides = [
+    { 
+      id: 1, 
+      title: '👋 Ucapan Salam', 
+      icon: '🌅', 
+      getData: () => store.getGreeting(),
+      render: (data: any) => ({
+        title: data.text,
+        subtitle: data.subtext,
+        icon: data.icon,
+      })
+    },
+    { 
+      id: 2, 
+      title: '📅 Booking Realtime', 
+      icon: '📅', 
+      getData: () => ({
+        today: (store.get('bookings') || []).filter((b: any) => b.date === new Date().toISOString().split('T')[0]).length,
+        tomorrow: (store.get('bookings') || []).filter((b: any) => b.date === new Date(Date.now() + 86400000).toISOString().split('T')[0]).length,
+      }),
+      render: (data: any) => ({
+        title: 'Booking Hari Ini',
+        subtitle: `${data.today} Bookings · ${data.tomorrow} Besok`,
+        icon: '📅',
+      })
+    },
+    { 
+      id: 3, 
+      title: '⚠️ K3 & Safety', 
+      icon: '⚠️',       getData: () => store.getK3Progress(),
+      render: (data: any) => ({
+        title: 'K3 Reports',
+        subtitle: `${data.pending} Pending · ${data.inProgress} Action · ${data.resolved} Resolved`,
+        icon: '⚠️',
+      })
+    },
+    { 
+      id: 4, 
+      title: '🌤️ Weather & Mitigation', 
+      icon: '🌤️', 
+      getData: () => store.getWeatherMitigations(),
+      render: (data: any) => ({
+        title: data.warning || 'Weather Update',
+        subtitle: `${data.temperature}°C · ${data.condition.toUpperCase()}`,
+        icon: data.condition === 'rain' ? '🌧️' : data.condition === 'storm' ? '⛈️' : '☀️',
+        alert: data.mitigations,
+      })
+    },
+    { 
+      id: 5, 
+      title: '👔 Command Center Info', 
+      icon: '👔', 
+      getData: () => ({
+        title: 'Info Management',
+        items: [
+          '📌 CEO Meeting with Investors - Room A (14:00)',
+          '📌 Foundation Visit - Lobby (10:00)',
+          '📌 Board Meeting - Room B (16:00)',
+        ],
+      }),
+      render: (data: any) => ({
+        title: data.title,
+        subtitle: `${data.items.length} Active Events`,
+        icon: '👔',
+        list: data.items,
+      })
+    },
+    { 
+      id: 6, 
+      title: '🏢 Info Umum', 
+      icon: '🏢', 
+      getData: () => ({
+        title: 'Info Umum',
+        items: [
+          '📌 Rapat Mingguan - R. Serbaguna (08:00)',
+          '📌 Koordinasi Departemen - Lobby (13:00)',
+          '📌 Training K3 - Aula (15:00)',
+        ],
+      }),      render: (data: any) => ({
+        title: data.title,
+        subtitle: `${data.items.length} Tasks Today`,
+        icon: '🏢',
+        list: data.items,
+      })
+    },
+    { 
+      id: 7, 
+      title: '💬 Ucapan Kabar', 
+      icon: '💬', 
+      getData: () => ({
+        title: 'Ucapan Kabar',
+        items: [
+          '🎂 Birthday: Bapak Hanung (Today)',
+          '🎉 Anniversary: PT. Dream OS (Tomorrow)',
+          '🏥 Get Well: Staff Maintenance',
+        ],
+      }),
+      render: (data: any) => ({
+        title: data.title,
+        subtitle: `${data.items.length} Announcements`,
+        icon: '💬',
+        list: data.items,
+      })
+    },
+  ];
 
   const modules = [
     { name: 'Command Center', icon: '⚡', path: '/modules/command' },
@@ -24,57 +134,71 @@ export default function DashboardPage() {
     { name: 'Asset', icon: '🗄️', path: '/modules/inventaris' },
   ];
 
-  // Initialize TinyGo WASM Engine
+  // Initialize
   useEffect(() => {
-    const initWASM = async () => {
-      console.log('🐹 TINYGO: Initializing...');
+    const init = async () => {
+      // Initialize TinyGo
       const ready = await initTinyGo();
       setTinyGoReady(ready);
       
       if (ready) {
-        console.log('🐹 TINYGO: Engine Ready!');
-        
-        // Get system stats from WASM
         const stats = await getSystemPerformance();
-        if (stats) {
-          setSystemStats(stats);
-          console.log('📊 SYSTEM STATS:', stats);
-        }
-        
-        // Calculate immunity using WASM
-        const immunityCalc = await getImmunityLevel(8, 50, 120);
-        setImmunity(Math.min(immunityCalc, 100));        
-        // Run neural simulation
-        const neural = await runNeuralSimulation(100, 1000);
-        if (neural) {
-          console.log('🧠 NEURAL SIMULATION:', neural);
-        }
-      }
+        setSystemStats(stats);      }
+
+      // Log audit
+      GhostShield.logAudit('DASHBOARD_LOAD', { user });
+
+      // Load slide data
+      updateSlideData();
     };
-    
-    initWASM();
+
+    init();
   }, []);
+
+  // Update slide data every 10 seconds
+  useEffect(() => {
+    const updateInterval = setInterval(updateSlideData, 10000);
+    return () => clearInterval(updateInterval);
+  }, []);
+
+  // Auto-rotate slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const updateSlideData = () => {
+    const data = slides.map((slide) => ({
+      ...slide,
+      data: slide.getData(),
+      rendered: slide.render(slide.getData()),
+    }));
+    setSlideData(data);
+  };
 
   useEffect(() => {
     const session = sessionStorage.getItem('dream_session');
     const sessionUser = sessionStorage.getItem('dream_user');
-    if (!session) {
-      router.push('/login');
-    } else if (sessionUser) {
-      setUser(sessionUser);
-    }
-    
-    // Immunity simulation
-    const timer = setInterval(() => {
-      setImmunity(prev => Math.min(prev + 1, 100));
-    }, 2000);
-    
-    return () => clearInterval(timer);
+    if (!session) router.push('/login');
+    else if (sessionUser) setUser(sessionUser);
   }, [router]);
 
-  const handleModuleClick = (path: string) => {
-    router.push(path);
+  const handleNav = (page: string) => {
+    setActiveNav(page);
+    const routes: Record<string, string> = {
+      home: '/dashboard',
+      profile: '/profile',
+      qr: '/qr',
+      alerts: '/alerts',
+      settings: '/settings',    };
+    if (page !== 'home') router.push(routes[page]);
   };
+
+  const handleModuleClick = (path: string) => router.push(path);
+
+  const currentSlideData = slideData[currentSlide]?.rendered || { title: 'Loading...', subtitle: '', icon: '⏳' };
 
   return (
     <div style={{ minHeight: '100vh', background: '#F2F2F7', paddingBottom: '120px' }}>
@@ -92,56 +216,49 @@ export default function DashboardPage() {
             🧬 Girangati: FULLY_OPERATIONAL
             {tinyGoReady && <span style={{ color: '#10b981', marginLeft: '8px' }}>· 🐹 WASM ACTIVE</span>}
           </p>
-        </div>        
-        {/* Immunity Badge */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', flexWrap: 'wrap' }}>
-          <div className="immunity-badge" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
-            <span>🛡️</span>
-            <span>IMMUNITY: {Math.floor(immunity)}% ({Math.floor(immunity/10)} Vaccines)</span>
-          </div>
-          {tinyGoReady && (
-            <div className="immunity-badge" style={{ background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)' }}>
-              <span>🐹</span>
-              <span>TINYGO: ACTIVE</span>
-            </div>
-          )}
         </div>
         
         {/* Welcome */}
         <div style={{ textAlign: 'center', marginTop: '15px', padding: '12px', background: '#f8f8fa', borderRadius: '16px' }}>
           <span style={{ color: '#8e8e93', fontSize: '13px' }}>Welcome, </span>
           <span style={{ color: '#10b981', fontWeight: '700', fontSize: '15px' }}>{user}</span>
-          {systemStats && (
-            <div style={{ fontSize: '10px', color: '#8e8e93', marginTop: '5px' }}>
-              Engine: {systemStats.engineVersion} · Platform: {systemStats.platform}
-            </div>
-          )}
         </div>
       </header>
 
-      {/* Booking Section */}
-      <div className="ios-card" style={{ marginTop: '20px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-          <div style={{ fontSize: '50px', marginBottom: '10px' }}>📅</div>
-          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#10b981', marginBottom: '5px' }}>Booking Realtime</h2>
-        </div>
-        
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '20px' }}>
-          <div style={{ background: '#f8f8fa', padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', fontWeight: '700', color: '#10b981', marginBottom: '5px' }}>12</div>
-            <div style={{ fontSize: '13px', color: '#8e8e93' }}>Hari Ini</div>
+      {/* 7 Integrated Slides Carousel */}
+      <div style={{ background: 'linear-gradient(135deg, rgba(15,23,42,0.95), rgba(2,6,23,0.9))', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '28px', padding: '24px', margin: '24px 15px', boxShadow: '0 12px 48px rgba(16,185,129,0.2)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+          <div style={{ color: '#10b981', fontSize: '15px', fontWeight: '700', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {currentSlideData.icon} {slideData[currentSlide]?.title || 'Loading...'}
           </div>
-          <div style={{ background: '#f8f8fa', padding: '20px', borderRadius: '20px', textAlign: 'center' }}>
-            <div style={{ fontSize: '36px', fontWeight: '700', color: '#10b981', marginBottom: '5px' }}>8</div>
-            <div style={{ fontSize: '13px', color: '#8e8e93' }}>Besok</div>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={() => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)} style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', padding: '10px 16px', borderRadius: '12px', fontSize: '13px', cursor: 'pointer' }}>◀</button>
+            <button onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)} style={{ background: 'rgba(16,185,129,0.2)', border: '1px solid rgba(16,185,129,0.3)', color: '#10b981', padding: '10px 16px', borderRadius: '12px', fontSize: '13px', cursor: 'pointer' }}>▶</button>
           </div>
         </div>
-        
-        <div style={{ background: '#f8f8fa', padding: '18px', borderRadius: '18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ fontWeight: '600', color: '#1c1c1e', marginBottom: '4px' }}>Ruang Meeting A</div>
-            <div style={{ fontSize: '13px', color: '#8e8e93' }}>09:00 - 11:00 · APPROVED</div>
-          </div>          <div style={{ width: '10px', height: '10px', background: '#10b981', borderRadius: '50%' }}></div>
+        <div style={{ minHeight: '240px', background: 'linear-gradient(135deg, rgba(2,6,23,0.95), rgba(15,23,42,0.9))', borderRadius: '22px', padding: '30px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(16,185,129,0.15)' }}>
+          <div style={{ fontSize: '72px', marginBottom: '18px' }}>{currentSlideData.icon}</div>
+          <div style={{ color: '#10b981', fontSize: '22px', fontWeight: '700', marginBottom: '10px' }}>{currentSlideData.title}</div>
+          <div style={{ color: 'rgba(148,163,184,0.85)', fontSize: '15px' }}>{currentSlideData.subtitle}</div>
+          {currentSlideData.alert && (
+            <div style={{ marginTop: '20px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', borderRadius: '16px', padding: '15px', width: '100%' }}>              <div style={{ color: '#ef4444', fontSize: '11px', fontWeight: '700', marginBottom: '10px' }}>⚠️ MITIGATION ALERT</div>
+              {currentSlideData.alert.map((item: string, i: number) => (
+                <div key={i} style={{ color: '#fca5a5', fontSize: '10px', marginBottom: '5px', textAlign: 'left' }}>{item}</div>
+              ))}
+            </div>
+          )}
+          {currentSlideData.list && (
+            <div style={{ marginTop: '20px', width: '100%' }}>
+              {currentSlideData.list.map((item: string, i: number) => (
+                <div key={i} style={{ color: 'rgba(148,163,184,0.85)', fontSize: '11px', marginBottom: '8px', textAlign: 'left', padding: '8px', background: 'rgba(16,185,129,0.05)', borderRadius: '8px' }}>{item}</div>
+              ))}
+            </div>
+          )}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '20px' }}>
+          {slides.map((_, i) => (
+            <button key={i} onClick={() => setCurrentSlide(i)} style={{ width: '12px', height: '12px', borderRadius: '50%', border: '2px solid rgba(16,185,129,0.4)', background: i === currentSlide ? '#10b981' : 'transparent', cursor: 'pointer', transition: 'all 0.3s' }} />
+          ))}
         </div>
       </div>
 
@@ -155,34 +272,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* TinyGo Performance Monitor */}
-      {tinyGoReady && systemStats && (
-        <div className="ios-card" style={{ marginTop: '20px', background: 'linear-gradient(135deg, rgba(139,92,246,0.1), rgba(109,40,217,0.1))', border: '1px solid rgba(139,92,246,0.3)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '15px' }}>
-            <span style={{ fontSize: '24px' }}>🐹</span>
-            <h3 style={{ fontSize: '16px', fontWeight: '700', color: '#8b5cf6' }}>TinyGo Performance Monitor</h3>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <div style={{ background: '#f8f8fa', padding: '15px', borderRadius: '16px' }}>
-              <div style={{ fontSize: '11px', color: '#8e8e93', marginBottom: '5px' }}>Engine Version</div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: '#1c1c1e' }}>{systemStats.engineVersion}</div>
-            </div>
-            <div style={{ background: '#f8f8fa', padding: '15px', borderRadius: '16px' }}>
-              <div style={{ fontSize: '11px', color: '#8e8e93', marginBottom: '5px' }}>Platform</div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: '#1c1c1e' }}>{systemStats.platform}</div>
-            </div>
-            <div style={{ background: '#f8f8fa', padding: '15px', borderRadius: '16px' }}>
-              <div style={{ fontSize: '11px', color: '#8e8e93', marginBottom: '5px' }}>Performance</div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: '#10b981' }}>{systemStats.performance}</div>
-            </div>
-            <div style={{ background: '#f8f8fa', padding: '15px', borderRadius: '16px' }}>
-              <div style={{ fontSize: '11px', color: '#8e8e93', marginBottom: '5px' }}>Immunity Level</div>
-              <div style={{ fontSize: '14px', fontWeight: '700', color: '#10b981' }}>{Math.floor(systemStats.immunityLevel)}%</div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* iOS Dock Navigation */}
       <nav className="ios-dock">
         <div onClick={() => { setActiveNav('home'); router.push('/dashboard'); }} className={`dock-item ${activeNav === 'home' ? 'active' : ''}`}>
@@ -190,7 +279,8 @@ export default function DashboardPage() {
           <span>HOME</span>
         </div>
         <div onClick={() => { setActiveNav('profile'); router.push('/profile'); }} className={`dock-item ${activeNav === 'profile' ? 'active' : ''}`}>
-          <span className="dock-icon">👤</span>          <span>PROFILE</span>
+          <span className="dock-icon">👤</span>
+          <span>PROFILE</span>
         </div>
         <div className="dock-center">
           <span style={{ fontSize: '28px' }}>📷</span>
@@ -200,8 +290,7 @@ export default function DashboardPage() {
           <span>ABOUT</span>
         </div>
         <div onClick={() => { setActiveNav('setting'); router.push('/settings'); }} className={`dock-item ${activeNav === 'setting' ? 'active' : ''}`}>
-          <span className="dock-icon">⚙️</span>
-          <span>SETTING</span>
+          <span className="dock-icon">⚙️</span>          <span>SETTING</span>
         </div>
       </nav>
     </div>
