@@ -138,3 +138,9 @@ export default function CommandCenter() {
     </div>
   );
 }
+// Update visual untuk Vaccine Stats
+const [vaccines, setVaccines] = React.useState(0);
+React.useEffect(() => {
+  const v = JSON.parse(localStorage.getItem('dream_vaccines') || '[]');
+  setVaccines(v.length);
+}, []);
