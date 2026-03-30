@@ -1,6 +1,6 @@
 export const SovereignHub = {
-  detectNetwork: async () => ({ online: typeof navigator !== 'undefined' ? navigator.onLine : true }),
-  scanBluetooth: async () => "Ready",
+  detectNetwork: async () => ({ online: true }),
+  scanBluetooth: async () => "Active",
   checkNFC: async () => "Ready",
   detectPrinter: async () => "Standby",
   detectSmartBox: () => "Connected"
