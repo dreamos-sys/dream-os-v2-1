@@ -37,9 +37,10 @@ export default function DashboardTV() {
   }, [focusedIndex, router, modules.length]);
 
   useEffect(() => {
-    const el = document.getElementById(`module-${focusedIndex}`);
+    const el = document.getElementById('module-' + focusedIndex);
     el?.focus();
   }, [focusedIndex]);
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-4 md:p-8">
       <header className="text-center mb-8">
@@ -58,20 +59,20 @@ export default function DashboardTV() {
         {modules.map((mod, idx) => (
           <button
             key={mod.id}
-            id={`module-${idx}`}
+            id={'module-' + idx}
             tabIndex={0}
             onClick={() => router.push(mod.path)}
-            className={`
-              group relative overflow-hidden rounded-3xl p-6 md:p-8
-              bg-gradient-to-br ${mod.color}
-              border-2 border-white/20
-              transition-all duration-300 ease-out
-              hover:scale-105 hover:border-yellow-400
-              focus:scale-105 focus:border-yellow-400 focus:shadow-[0_0_40px_rgba(255,215,0,0.6)]
-              focus:outline-none focus:ring-4 focus:ring-yellow-400/50
-              min-h-[140px] md:min-h-[180px]
-              flex flex-col items-center justify-center gap-3 md:gap-4
-            `}
+            className={
+              'group relative overflow-hidden rounded-3xl p-6 md:p-8 ' +
+              'bg-gradient-to-br ' + mod.color + ' ' +
+              'border-2 border-white/20 ' +
+              'transition-all duration-300 ease-out ' +
+              'hover:scale-105 hover:border-yellow-400 ' +
+              'focus:scale-105 focus:border-yellow-400 focus:shadow-[0_0_40px_rgba(255,215,0,0.6)] ' +
+              'focus:outline-none focus:ring-4 focus:ring-yellow-400/50 ' +
+              'min-h-[140px] md:min-h-[180px] ' +
+              'flex flex-col items-center justify-center gap-3 md:gap-4'
+            }
           >
             <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity" />
             <span className="text-4xl md:text-6xl drop-shadow-lg transform group-hover:scale-110 transition-transform">
@@ -89,5 +90,6 @@ export default function DashboardTV() {
         <p>Dream OS v2.1 • Next.js • Termux Powered 📱</p>
         <p className="mt-1 text-emerald-400/80">Bismillah • Bi Idznillah</p>
       </footer>
-    </main>  );
+    </main>
+  );
 }
