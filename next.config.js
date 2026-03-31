@@ -1,14 +1,18 @@
 /** @type {import('next').NextConfig} */
 module.exports = {
-  swcMinify: false,  // ✅ Disable SWC minify (Termux friendly)
-  output: 'export',  // ✅ Static export untuk TV Box
-  images: { unoptimized: true },  // ✅ No image optimization needed
+  swcMinify: false,
+  output: 'export',
+  images: { unoptimized: true },
   trailingSlash: true,
-  webpack: (config) => {
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false, net: false, tls: false, crypto: false,
-    };
-    return config;
-  },
+  // Force no cache
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' }
+        ]
+      }
+    ]
+  }
 }
