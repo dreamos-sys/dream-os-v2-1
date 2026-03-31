@@ -1,14 +1,14 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { store } from '@/lib/data/global-store';
+// import { store } from '@/lib/data/global-store'; // TEMP DISABLED
 
 export const EnterpriseMixer = () => {
   const [levels, setLevels] = useState([50, 50, 50, 50]);
 
   useEffect(() => {
     const calculateLevels = () => {
-      const bookings = store.get('bookings')?.length || 0;
-      const k3 = store.get('k3Reports')?.length || 0;
+      const bookings = // store.get('bookings')?.length || 0;
+      const k3 = // store.get('k3Reports')?.length || 0;
       const maintenance = 10; // Placeholder
       
       // Map data ke 0-100%
