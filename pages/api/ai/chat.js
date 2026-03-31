@@ -1,4 +1,4 @@
-// pages/api/ai/chat.js - Dream OS V21 PRO (Anti-Interstitial Mode)
+// pages/api/ai/chat.js - Dream OS V21 PRO (Official Pinggy Bypass)
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
   
@@ -13,8 +13,8 @@ export default async function handler(req, res) {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'User-Agent': 'DreamOS-Client/1.0',
-        'pinggy-skip-interstitial': 'true' // <-- KUNCI PEMBUKA PINGGY
+        'X-Pinggy-No-Screen': 'true', // <-- INI KUNCI ASLINYA (Sesuai Gambar 114)
+        'User-Agent': 'DreamOS-V21-Pro/1.0' 
       },
       body: JSON.stringify({
         model: 'qwen2.5-coder:1.5b',
