@@ -1,1 +1,15 @@
-{"framework":"nextjs","buildCommand":"npm run build"}
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "git": {
+    "deploymentEnabled": { "main": true }
+  },
+  "build": {
+    "env": {
+      "FORCE_REBUILD": "true"
+    }
+  }
+}
