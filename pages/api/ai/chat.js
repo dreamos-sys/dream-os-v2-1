@@ -50,17 +50,10 @@ export default async function handler(req, res) {
     
     // 🎁 RETURN DEBUG INFO
     res.status(200).json({ 
-      response: finalReply || '🧘 AI sedang berpikir...', 
-      model: modelName,
-      source: isLocal ? 'local' : 'cloud',
-      debug: {
-        useLocal_param: useLocal,
-        LOCAL_OLLAMA_URL_set: hasLocalUrl,
-        OLLAMA_KEY_set: hasCloudKey,
-        isLocal_result: isLocal,
-        apiUrl_used: isLocal ? process.env.LOCAL_OLLAMA_URL : 'ollama.com'
-      }
-    });
+  response: finalReply || '🧘 AI sedang berpikir...', 
+  model: modelName,
+  source: isLocal ? 'local' : 'cloud'
+});
     
   } catch (err) {
     res.status(500).json({ 
