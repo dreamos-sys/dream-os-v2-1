@@ -1,11 +1,4 @@
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="id">
-      <body className="bg-neutral-900 text-white">{children}</body>
-    </html>
-  );
-}
-import '@/styles/globals.css';
+import './globals.css';
 
 export const metadata = {
   title: 'Dream OS V21',
