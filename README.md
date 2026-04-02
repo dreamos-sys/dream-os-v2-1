@@ -175,3 +175,9 @@ To run from source:
 # Go >= 1.22
 go run . help
 ```
+### Route Status
+
+- ✅ /dream - Main iOS White UI (fully functional)
+- ✅ /test - Static test page
+- ⚠️ /cc - Redirects to /dream (use /dream directly)
+- ✅ /api/ai/chat - AI backend API
