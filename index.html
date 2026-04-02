@@ -2,27 +2,143 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Dream OS</title>
     <style>
-        body { margin: 0; background: #020617; color: white; font-family: system-ui; }
-        #loading { position: fixed; inset: 0; background: #020617; display: flex; align-items: center; justify-content: center; flex-direction: column; z-index: 9999; }
-        .spinner { width: 40px; height: 40px; border: 3px solid rgba(16,185,129,0.3); border-top-color: #10b981; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 10px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: radial-gradient(circle at 10% 20%, #0f172a, #020617);
+            color: #e2e8f0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            min-height: 100vh;
+            padding-bottom: 70px;
+        }
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(16,185,129,0.3);
+            border-top-color: #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
-        #app { padding: 20px; max-width: 500px; margin: 0 auto; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .bismillah { font-size: 24px; color: #10b981; font-family: serif; }
-        .grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 15px; margin-top: 20px; }
-        .card { background: rgba(255,255,255,0.05); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; border: 1px solid rgba(16,185,129,0.3); transition: all 0.3s; }
-        .card:hover { transform: scale(1.02); border-color: #10b981; box-shadow: 0 0 15px rgba(16,185,129,0.3); }
-        .card i { font-size: 24px; color: #10b981; }
-        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a; display: flex; justify-content: space-around; padding: 10px; border-top: 1px solid #10b981; }
-        .nav button { background: none; border: none; color: #94a3b8; font-size: 12px; cursor: pointer; transition: all 0.2s; }
-        .nav button:hover { color: #10b981; transform: translateY(-2px); }
-        .nav button.active { color: #10b981; }
-        footer { text-align: center; font-size: 10px; color: #475569; margin: 80px 0 60px; }
+
+        .header {
+            padding: 20px 20px 10px;
+            text-align: center;
+            background: rgba(15,23,42,0.7);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(16,185,129,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .bismillah {
+            font-size: 24px;
+            color: #10b981;
+            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            font-weight: 500;
+        }
+        .shalawat {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+        }
+        .dream-team {
+            margin-top: 8px;
+            font-size: 11px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.03);
+        }
+        .dream-team:hover {
+            color: #10b981;
+            background: rgba(16,185,129,0.1);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(16,185,129,0.2);
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(16,185,129,0.1);
+            border-color: #10b981;
+            box-shadow: 0 8px 20px rgba(16,185,129,0.2);
+        }
+        .card-icon i { font-size: 32px; color: #10b981; margin-bottom: 12px; }
+        .card-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .card-desc { font-size: 10px; color: #94a3b8; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15,23,42,0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 16px 12px;
+            border-top: 1px solid rgba(16,185,129,0.3);
+            z-index: 100;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 6px 12px;
+            border-radius: 30px;
+        }
+        .nav-item i { font-size: 20px; }
+        .nav-item:hover {
+            color: #10b981;
+            background: rgba(16,185,129,0.1);
+            transform: translateY(-2px);
+        }
+        .nav-item.active { color: #10b981; background: rgba(16,185,129,0.15); }
+        #content { text-align: center; padding: 20px; color: #94a3b8; font-size: 12px; }
+        footer { text-align: center; font-size: 9px; color: #475569; margin: 40px 0 20px; }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="loading"><div class="spinner"></div><p>Loading Dream OS...</p></div>
