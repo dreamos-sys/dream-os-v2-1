@@ -1,33 +1,30 @@
-/* Dream OS V21 - Minimal CSS */
-/* Using inline styles in Pages Router components */
-body {
+/* Dream OS V21 - Minimal CSS (No Tailwind classes) */
+/* All components use inline styles for reliable build */
+
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-/* Glassmorphism & Magnetic Effects */
-.glass-card {
-  @apply backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl;
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
+/* Simple utility classes (no Tailwind) */
+.text-center { text-align: center; }
+.font-bold { font-weight: 700; }
+.hidden { display: none; }
+
+/* Smooth scrolling */
+html { scroll-behavior: smooth; }
+
+/* Focus styles for accessibility */
 :focus-visible {
-  outline: 2px solid #10b981;
+  outline: 2px solid #3b82f6;
   outline-offset: 2px;
-}
-
-@keyframes magnetic {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-.ghost-icon:hover {
-  animation: magnetic 0.3s ease;
-}
-
-/* Untuk remote TV */
-button, a, [role="button"] {
-  min-width: 48px;
-  min-height: 48px;
 }
