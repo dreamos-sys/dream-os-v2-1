@@ -1,4 +1,4 @@
-import './globals.css';
+// import './globals.css' // commented for inline styles;
 
 export const metadata = {
   title: 'Dream OS V21',
